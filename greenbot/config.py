@@ -1,10 +1,16 @@
-import json
+import logging
 import os
+import json
 
-def get():
+token = ''
+
+def load():
+    global token
     fileName = 'config.json'
+    logging.debug('Loading config from ' + fileName)
     # Test if file is there...
     if not os.path.isfile(fileName):
+        logging.debug('Config file not found. Creating default...')
         # If not: Create default
         defaultConfig = {
             'token' : ''
@@ -15,5 +21,6 @@ def get():
 
     # And load it...
     with open(fileName) as file:
-        return json.loads(file.read())
-    return {}
+        config = json.loads(file.read())
+        token = config['token']
+    logging.debug('Config loaded')
