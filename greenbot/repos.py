@@ -8,6 +8,7 @@ reposPath = 'repos'
 
 def update():
     global reposPath
+    logging.debug('Updating repos')
     try:
         os.mkdir(reposPath)
     except FileExistsError:
@@ -27,3 +28,4 @@ def update():
             logging.info('Cloning ' + repoUrl)
             os.mkdir(repoPath)
             git.Git().clone(repoUrl, repoPath)
+    logging.debug('Updated repos')
