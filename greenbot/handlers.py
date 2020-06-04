@@ -1,6 +1,7 @@
 import logging
 import greenbot.config
 import greenbot.repos
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def start(update, context):
     logging.debug('Command: start')
@@ -35,3 +36,30 @@ def script_info(update, context):
     if len(context.args) != 2:
         context.bot.send_message(chat_id=update.effective_chat.id, text='Missing params: [repo] [script]')
     context.bot.send_message(chat_id=update.effective_chat.id, text=greenbot.repos.getModule(context.args[0], context.args[1]).info())
+
+def test_keyboard(update, context):
+    logging.debug('Command: test_keyboard')
+    keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
+                 InlineKeyboardButton("Option 2", callback_data='2')],
+
+                [InlineKeyboardButton("Option 3", callback_data='3')],
+
+                [InlineKeyboardButton("Option 1", callback_data='1'),
+                InlineKeyboardButton("Option 2", callback_data='2'),
+                InlineKeyboardButton("Option 3", callback_data='3'),
+                InlineKeyboardButton("Option 4", callback_data='4'),
+                InlineKeyboardButton("Option 5", callback_data='5')]]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    update.message.reply_text('Please choose:', reply_markup=reply_markup)
+
+def test_keyboard_button(update, context):
+    logging.debug('Callback: test_keyboard_button')
+    query = update.callback_query
+
+    # CallbackQueries need to be answered, even if no notification to the user is needed
+    # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
+    query.answer()
+
+    query.edit_message_text(text="Selected option: {}".format(query.data))
