@@ -9,9 +9,6 @@ def init():
     global updater
     global dispatcher
 
-    # Load config
-    greenbot.config.load()
-
     # Init telegram
     updater = Updater(token=greenbot.config.token, use_context=True)
 
