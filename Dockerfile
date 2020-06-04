@@ -3,7 +3,7 @@ FROM alpine:latest
 # Permanent env
 WORKDIR /greenbot
 COPY . .
-RUN apk add --no-cache python3
+RUN apk add --no-cache python3 git
 
 # Install libs (temp env)
 RUN apk add --no-cache python3-dev py3-pip gcc musl-dev libffi-dev openssl-dev \
