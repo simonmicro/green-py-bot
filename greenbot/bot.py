@@ -14,6 +14,8 @@ def init():
 
     # Install handlers
     updater.dispatcher.add_handler(CommandHandler('start', greenbot.handlers.start))
+    updater.dispatcher.add_handler(CommandHandler('activate', greenbot.handlers.activate))
+    updater.dispatcher.add_handler(CommandHandler('deactivate', greenbot.handlers.deactivate))
     updater.dispatcher.add_handler(CommandHandler('stop', greenbot.handlers.stop))
 
 def start():

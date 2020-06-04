@@ -3,7 +3,7 @@ import os
 import json
 
 token = ''
-repos = []
+repos = {}
 
 def load():
     global token
@@ -16,7 +16,7 @@ def load():
         # If not: Create default
         defaultConfig = {
             'token' : '',
-            'repos' : ['css']
+            'repos' : {}
         }
         f = open(fileName, 'w')
         f.write(json.dumps(defaultConfig, sort_keys=True, indent=4))

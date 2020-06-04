@@ -1,5 +1,4 @@
 import os
-import hashlib
 import greenbot.config
 import git
 import logging
@@ -14,18 +13,14 @@ def update():
     except FileExistsError:
         pass
     # Update all copies of the remote repos
-    for repoUrl in greenbot.config.repos:
-        # Generate the repo name based on the URI
-        m = hashlib.sha256()
-        m.update(repoUrl.encode())
-        repoName = m.hexdigest()
+    for repoName, repoUrl in greenbot.config.repos.items():
         repoPath = os.path.join(reposPath, repoName)
         if os.path.isdir(repoPath):
             # Dir is already there -> just update it
-            logging.info('Updating ' + repoUrl)
+            logging.info('Updating ' + repoName + ' ' + repoUrl)
             git.Git(repoPath).pull()
         else:
-            logging.info('Cloning ' + repoUrl)
+            logging.info('Cloning ' + repoName + ' ' + repoUrl)
             os.mkdir(repoPath)
             git.Git().clone(repoUrl, repoPath)
     logging.debug('Updated repos')
