@@ -11,4 +11,4 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 greenbot.bot.init()
 
 # Start the bot itself...
-greenbot.bot.run()
+greenbot.bot.start()
