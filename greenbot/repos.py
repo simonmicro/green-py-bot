@@ -24,3 +24,20 @@ def update():
             os.mkdir(repoPath)
             git.Git().clone(repoUrl, repoPath)
     logging.debug('Updated repos')
+
+def getScripts(repoName):
+    global reposPath
+    logging.debug('Checking for scripts in ' + repoName)
+    scripts = []
+    for root, dirs, files in os.walk(os.path.join(reposPath, repoName)):
+        for filename in files:
+            if filename.endswith('.py'):
+                scripts.append(os.path.splitext(filename)[0])
+        break
+    return scripts
+
+def getRepos():
+    repos = []
+    for name, url in greenbot.config.repos.items():
+        repos.append(name)
+    return repos
