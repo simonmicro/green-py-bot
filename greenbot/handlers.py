@@ -29,3 +29,9 @@ def list_scripts(update, context):
     if len(context.args) != 1:
         context.bot.send_message(chat_id=update.effective_chat.id, text='Missing params: [repo]')
     context.bot.send_message(chat_id=update.effective_chat.id, text='Available scripts in ' + context.args[0] + ': ' + ' '.join(greenbot.repos.getScripts(context.args[0])))
+
+def script_info(update, context):
+    logging.debug('Command: script_info')
+    if len(context.args) != 2:
+        context.bot.send_message(chat_id=update.effective_chat.id, text='Missing params: [repo] [script]')
+    context.bot.send_message(chat_id=update.effective_chat.id, text=greenbot.repos.getModule(context.args[0], context.args[1]).info())

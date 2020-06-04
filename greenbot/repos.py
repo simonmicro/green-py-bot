@@ -2,6 +2,7 @@ import os
 import greenbot.config
 import git
 import logging
+import importlib
 
 reposPath = 'repos'
 
@@ -25,6 +26,12 @@ def update():
             git.Git().clone(repoUrl, repoPath)
     logging.debug('Updated repos')
 
+def getRepos():
+    repos = []
+    for name, url in greenbot.config.repos.items():
+        repos.append(name)
+    return repos
+
 def getScripts(repoName):
     global reposPath
     logging.debug('Checking for scripts in ' + repoName)
@@ -36,8 +43,8 @@ def getScripts(repoName):
         break
     return scripts
 
-def getRepos():
-    repos = []
-    for name, url in greenbot.config.repos.items():
-        repos.append(name)
-    return repos
+def getModule(repoName, scriptName):
+    global reposPath
+    modulePath = '.'.join([reposPath, repoName, scriptName])
+    logging.debug('Importing ' + modulePath)
+    return importlib.import_module(modulePath)
