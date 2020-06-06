@@ -19,20 +19,27 @@ class User:
         if os.path.isfile(self.__getConfigFileName()):
             with open(self.__getConfigFileName()) as file:
                 config = json.loads(file.read())
-                self.scripts = config['scripts']
+                self.scripts = set(config['scripts'])
 
     def __getConfigFileName(self):
         global userPath
         return os.path.join(userPath, str(self.uid) + '.json')
 
-    def __save(self):
+    def __write(self):
         f = open(self.__getConfigFileName(), 'w')
-        f.write(json.dumps(self.__dict__, sort_keys=True, indent=4))
+        writeme = {
+            'scripts' : self.scripts
+        }
+        f.write(json.dumps(writeme, sort_keys=True, indent=4))
         f.close()
         return
 
     def activateScript(self, repo, script):
+        self.scripts.append(repo + '/' + script)
+        self.__write()
         return
 
     def deactivateScript(self, repo, script):
+        self.scripts.remove(repo + '/' + script)
+        self.__write()
         return
