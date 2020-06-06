@@ -18,9 +18,8 @@ def init():
     updater.dispatcher.add_handler(CommandHandler('list_repos', greenbot.handlers.list_repos))
     updater.dispatcher.add_handler(CommandHandler('list_scripts', greenbot.handlers.list_scripts))
     updater.dispatcher.add_handler(CommandHandler('script_info', greenbot.handlers.script_info))
-    updater.dispatcher.add_handler(CommandHandler('test_keyboard', greenbot.handlers.test_keyboard))
-    updater.dispatcher.add_handler(CallbackQueryHandler(greenbot.handlers.test_keyboard_button))
     updater.dispatcher.add_handler(CommandHandler('activate', greenbot.handlers.activate))
+    updater.dispatcher.add_handler(CallbackQueryHandler(greenbot.handlers.keyboard_button))
     updater.dispatcher.add_handler(CommandHandler('deactivate', greenbot.handlers.deactivate))
     updater.dispatcher.add_handler(CommandHandler('stop', greenbot.handlers.stop))
 

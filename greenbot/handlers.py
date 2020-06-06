@@ -1,6 +1,8 @@
 import logging
+import json
 import greenbot.config
 import greenbot.repos
+import greenbot.util
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def start(update, context):
@@ -12,11 +14,6 @@ def stop(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text='Bye')
     from greenbot.bot import stop
     stop()
-
-def activate(update, context):
-    logging.debug('Command: activate')
-    if len(context.args) != 2:
-        context.bot.send_message(chat_id=update.effective_chat.id, text='Missing params: [repo] [script]')
 
 def deactivate(update, context):
     logging.debug('Command: deactivate')
@@ -37,29 +34,48 @@ def script_info(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text='Missing params: [repo] [script]')
     context.bot.send_message(chat_id=update.effective_chat.id, text=greenbot.repos.getModule(context.args[0], context.args[1]).info())
 
-def test_keyboard(update, context):
-    logging.debug('Command: test_keyboard')
-    keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
-                 InlineKeyboardButton("Option 2", callback_data='2')],
+def activate(update, context):
+    logging.debug('Command: activate')
 
-                [InlineKeyboardButton("Option 3", callback_data='3')],
+    # Show keyboard for repos (if not given)
+    if len(context.args) < 1:
+        # Show keyboard with key for every repo
+        keyboard = []
+        for repoName in greenbot.repos.getRepos():
+            keyboard.append([InlineKeyboardButton(repoName, callback_data='{"cmd":"activate", "params": ["' + repoName + '"]}')])
+        greenbot.util.update_or_reply(update, 'Missing repo param. Please select repo', reply_markup=InlineKeyboardMarkup(keyboard))
+        return
 
-                [InlineKeyboardButton("Option 1", callback_data='1'),
-                InlineKeyboardButton("Option 2", callback_data='2'),
-                InlineKeyboardButton("Option 3", callback_data='3'),
-                InlineKeyboardButton("Option 4", callback_data='4'),
-                InlineKeyboardButton("Option 5", callback_data='5')]]
+    # Show keyboard for script (if not given)
+    if len(context.args) < 2:
+        # Show keyboard with key for every script
+        keyboard = []
+        for scriptName in greenbot.repos.getScripts(context.args[0]):
+            keyboard.append([InlineKeyboardButton(scriptName, callback_data='{"cmd":"activate", "params": ["' + context.args[0] + '", "' + scriptName + '"]}')])
+        greenbot.util.update_or_reply(update, 'Missing script param. Please select script', reply_markup=InlineKeyboardMarkup(keyboard))
+        return
 
-    reply_markup = InlineKeyboardMarkup(keyboard)
+    # Okay, activate the script
+    greenbot.util.update_or_reply(update, 'OK: ' + context.args[0] + ' ' + context.args[1])
 
-    update.message.reply_text('Please choose:', reply_markup=reply_markup)
-
-def test_keyboard_button(update, context):
-    logging.debug('Callback: test_keyboard_button')
+def keyboard_button(update, context):
     query = update.callback_query
-
-    # CallbackQueries need to be answered, even if no notification to the user is needed
-    # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
+    logging.debug('Callback: Keyboard button pressed', query.data)
     query.answer()
-
-    query.edit_message_text(text="Selected option: {}".format(query.data))
+    # Now try to decode the packed data into commands and args
+    try:
+        msgData = json.loads(query.data)
+        # If successful: Test if the cmd param is set - if yes, forward respectively
+        if 'cmd' in msgData.keys():
+            logging.debug('Found command data')
+            context.args = msgData['params']
+            if msgData['cmd'] == 'activate':
+                activate(update, context)
+            else:
+                logging.error('Command not allowed inside callback!')
+        else:
+            logging.error('Keyboard press didn\'t contain any supported operation')
+    except json.decoder.JSONDecodeError as e:
+        # Ignore the data and inform user about error
+        logging.error('Error at JSON data parsing (' + str(e) + ') by keyboard press: ' + query.data)
+        pass
