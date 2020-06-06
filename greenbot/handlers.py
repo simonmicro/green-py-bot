@@ -60,7 +60,7 @@ def activate(update, context):
 
 def keyboard_button(update, context):
     query = update.callback_query
-    logging.debug('Callback: Keyboard button pressed', query.data)
+    logging.debug('Callback: Keyboard button pressed' + str(query.data))
     query.answer()
     # Now try to decode the packed data into commands and args
     try:
@@ -77,5 +77,5 @@ def keyboard_button(update, context):
             logging.error('Keyboard press didn\'t contain any supported operation')
     except json.decoder.JSONDecodeError as e:
         # Ignore the data and inform user about error
-        logging.error('Error at JSON data parsing (' + str(e) + ') by keyboard press: ' + query.data)
+        logging.error('Error at JSON data parsing: ' + str(e))
         pass
