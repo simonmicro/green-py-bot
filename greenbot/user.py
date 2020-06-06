@@ -14,7 +14,7 @@ class User:
     def __init__(self, uid):
         self.uid = int(uid)
 
-        # We'll default config if nothing is found
+        # We'll use the default config if nothing is found
         logging.debug('Getting user data for ' + str(uid))
         if os.path.isfile(self.__getConfigFileName()):
             with open(self.__getConfigFileName()) as file:
