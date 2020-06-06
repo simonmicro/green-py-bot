@@ -5,11 +5,12 @@ import logging
 import importlib
 
 reposPath = 'data/repos'
+# Make sure the repos path exists
+os.makedirs(reposPath, exist_ok=True)
 
 def update():
     global reposPath
     logging.debug('Updating repos')
-    os.makedirs(reposPath, exist_ok=True)
     # Update all copies of the remote repos
     for repoName, repoUrl in greenbot.config.repos.items():
         repoPath = os.path.join(reposPath, repoName)
