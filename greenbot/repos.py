@@ -19,11 +19,17 @@ def update():
         if os.path.isdir(repoPath):
             # Dir is already there -> just update it
             logging.info('Updating ' + repoName + ' ' + repoUrl)
-            git.Git(repoPath).pull()
+            try:
+                git.Git(repoPath).pull()
+            except git.exc.GitCommandError as e:
+                logging.error('Could not update ' + repoName + ': ' + str(e))
         else:
             logging.info('Cloning ' + repoName + ' ' + repoUrl)
             os.mkdir(repoPath)
-            git.Git().clone(repoUrl, repoPath)
+            try:
+                git.Git().clone(repoUrl, repoPath)
+            except git.exc.GitCommandError as e:
+                logging.error('Could not initial clone ' + repoName + ': ' + str(e))
     logging.debug('Updated repos')
 
 def getRepos():
