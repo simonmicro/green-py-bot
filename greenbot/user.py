@@ -1,4 +1,6 @@
+import os
 import json
+import logging
 
 userPath = 'data/user'
 
@@ -10,18 +12,23 @@ class User:
     scripts = []
 
     def __init__(self, uid):
-        global userPath
-        self.uid = uid
+        self.uid = int(uid)
 
         # We'll default config if nothing is found
-        logging.debug('Getting user data for ' + int(uid))
-        fileName = os.path.join(userPath, int(uid) + '.json')
-        if os.path.isfile(fileName):
-            with open(fileName) as file:
+        logging.debug('Getting user data for ' + str(uid))
+        if os.path.isfile(self.__getConfigFileName()):
+            with open(self.__getConfigFileName()) as file:
                 config = json.loads(file.read())
                 self.scripts = config['scripts']
 
+    def __getConfigFileName(self):
+        global userPath
+        return os.path.join(userPath, str(self.uid) + '.json')
+
     def __save(self):
+        f = open(self.__getConfigFileName(), 'w')
+        f.write(json.dumps(self.__dict__, sort_keys=True, indent=4))
+        f.close()
         return
 
     def activateScript(self, repo, script):

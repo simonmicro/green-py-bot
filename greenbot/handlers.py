@@ -3,6 +3,7 @@ import json
 import greenbot.config
 import greenbot.repos
 import greenbot.util
+import greenbot.user
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def start(update, context):
@@ -33,6 +34,10 @@ def script_info(update, context):
     if len(context.args) != 2:
         context.bot.send_message(chat_id=update.effective_chat.id, text='Missing params: [repo] [script]')
     context.bot.send_message(chat_id=update.effective_chat.id, text=greenbot.repos.getModule(context.args[0], context.args[1]).info())
+
+def user_info(update, context):
+    logging.debug('Command: user_info')
+    context.bot.send_message(chat_id=update.effective_chat.id, text='User info: ' + str(greenbot.user.User(update.message.chat.id).scripts))
 
 def activate(update, context):
     logging.debug('Command: activate')
