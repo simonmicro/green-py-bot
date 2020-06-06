@@ -5,4 +5,4 @@ def update_or_reply(update, *args, **kwargs):
         return update.message.reply_text(*args, **kwargs)
     else:
         # Triggred by callback -> edit last msg
-        return update.callback_query.message.edit_text(*args, **kwargs)
+        return update.callback_query.edit_message_text(*args, **kwargs)
