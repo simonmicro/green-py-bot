@@ -4,15 +4,12 @@ import git
 import logging
 import importlib
 
-reposPath = 'repos'
+reposPath = 'data/repos'
 
 def update():
     global reposPath
     logging.debug('Updating repos')
-    try:
-        os.mkdir(reposPath)
-    except FileExistsError:
-        pass
+    os.makedirs(reposPath, exist_ok=True)
     # Update all copies of the remote repos
     for repoName, repoUrl in greenbot.config.repos.items():
         repoPath = os.path.join(reposPath, repoName)
