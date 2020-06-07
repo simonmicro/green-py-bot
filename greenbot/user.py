@@ -49,3 +49,6 @@ class User:
         for path in self.__scripts:
             returnme.append(path.split('/'))
         return returnme
+
+    def getUID(self):
+        return self.__uid
