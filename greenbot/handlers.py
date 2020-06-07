@@ -61,7 +61,7 @@ def activate(update, context):
         return
 
     # Okay, activate the script
-    greenbot.user.User(greenbot.util.getChatID(update)).activateScript(context.args[0], context.args[1])
+    greenbot.user.User(update.effective_chat.id).activateScript(context.args[0], context.args[1])
     greenbot.util.updateOrReply(update, 'OK: ' + context.args[0] + '/' + context.args[1])
 
 def keyboard_button(update, context):
