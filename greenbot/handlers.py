@@ -1,10 +1,9 @@
 import logging
-import json
-import schedule
 import greenbot.config
 import greenbot.repos
 import greenbot.util
 import greenbot.user
+import greenbot.schedule
 import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -20,6 +19,7 @@ def stop(update, context):
 
 def next_run(update, context):
     logging.debug('Command: next_run')
+    import schedule
     context.bot.send_message(chat_id=update.effective_chat.id, text='Next run scheduled at ' + str(schedule.next_run()))
 
 def list_repos(update, context):
@@ -67,8 +67,11 @@ def schedule(update, context):
     if not scriptIdentifier:
         return
 
-    # Okay, 
-    greenbot.util.updateOrReply(update, 'RESCHEDULED: ' + scriptIdentifier)
+    # Reschedule it for now to run it every minute
+    newSchedule = greenbot.schedule.Schedule()
+    newSchedule.setInterval(1)
+    greenbot.user.get(update.effective_chat.id).setScriptSchedule(scriptIdentifier, newSchedule)
+    greenbot.util.updateOrReply(update, 'RESCHEDULED: TO RUN EVERY MINUTE ' + scriptIdentifier)
 
 def deactivate(update, context):
     logging.debug('Command: deactivate')
@@ -85,6 +88,7 @@ def deactivate(update, context):
     greenbot.util.updateOrReply(update, 'DEACTIVATED: ' + context.args[0])
 
 def keyboard_button(update, context):
+    import json
     query = update.callback_query
     logging.debug('Callback: Keyboard button pressed' + str(query.data))
     query.answer()

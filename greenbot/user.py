@@ -26,6 +26,7 @@ class User:
                 for identifier, settings in config['scripts'].items():
                     self.__scripts.add(identifier)
                     self.__schedules[identifier] = greenbot.schedule.Schedule(settings['schedule'])
+                    self.__schedules[identifier].activate(self, identifier)
 
     def __getConfigFileName(self):
         global userPath
@@ -46,6 +47,7 @@ class User:
     def activateScript(self, scriptIdentifier):
         self.__scripts.add(scriptIdentifier)
         self.setScriptSchedule(scriptIdentifier, self.getScriptSchedule(scriptIdentifier))
+        self.getScriptSchedule(scriptIdentifier).activate()
         self.__write()
         logging.debug('Activated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
@@ -53,6 +55,7 @@ class User:
     def deactivateScript(self, scriptIdentifier):
         self.__scripts.remove(scriptIdentifier)
         # We are not deleting the schedule data here - just in case the user deactivated the script by accident
+        self.__schedules[scriptIdentifier].deactivate()
         self.__write()
         logging.debug('Deactivated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
@@ -65,8 +68,14 @@ class User:
             return self.__schedules[scriptIdentifier]
         return greenbot.schedule.Schedule()
 
-    def setScriptSchedule(self, scriptIdentifier, schedule):
-        self.__schedules[scriptIdentifier] = schedule
+    def setScriptSchedule(self, scriptIdentifier, newSchedule):
+        # Deactivate current schedule
+        self.__schedules[scriptIdentifier].deactivate()
+        # And install new schedule
+        self.__schedules[scriptIdentifier] = newSchedule
+        self.__write()
+        newSchedule.activate(self, scriptIdentifier)
+        logging.debug('Rescheduled ' + scriptIdentifier + ' for user ' + str(self.__uid))
 
     def getUID(self):
         return self.__uid

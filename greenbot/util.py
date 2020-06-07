@@ -2,7 +2,6 @@ import greenbot.repos
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def updateOrReply(update, *args, **kwargs):
-    print(update.effective_message)
     # Detect if we are inside a callback (in that case we will update the msg) or just inside a handler
     if update.callback_query is not None:
         # Triggered by callback -> edit last msg
