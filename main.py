@@ -25,5 +25,5 @@ schedule.every().day.do(greenbot.repos.update)
 
 while greenbot.bot.updater.running:
     logging.debug('Executing pending jobs...')
-    schedule.run_pending() 
-    time.sleep(60) 
+    schedule.run_pending()
+    time.sleep(60)

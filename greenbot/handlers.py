@@ -1,5 +1,6 @@
 import logging
 import json
+import schedule
 import greenbot.config
 import greenbot.repos
 import greenbot.util
@@ -15,6 +16,10 @@ def stop(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text='Bye')
     from greenbot.bot import stop
     stop()
+
+def next_run(update, context):
+    logging.debug('Command: next_run')
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Next run scheduled at ' + str(schedule.next_run()))
 
 def list_repos(update, context):
     logging.debug('Command: list_repos')
