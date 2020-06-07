@@ -1,7 +1,7 @@
+import time
 import logging
-import json
+import schedule
 import greenbot.config
-import greenbot.handlers
 import greenbot.bot
 import greenbot.repos
 
@@ -19,3 +19,11 @@ greenbot.bot.start()
 
 # Update the local repos
 greenbot.repos.update()
+
+# Schedue some maintenance job(s)
+schedule.every().day.do(greenbot.repos.update)
+
+while greenbot.bot.updater.running:
+    logging.debug('Executing pending jobs...')
+    schedule.run_pending() 
+    time.sleep(60) 

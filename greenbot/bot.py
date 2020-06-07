@@ -1,5 +1,6 @@
 import logging
 import greenbot.config
+import greenbot.handlers
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
 from telegram.ext import CallbackQueryHandler
