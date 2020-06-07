@@ -34,4 +34,4 @@ while greenbot.bot.updater.running:
     time.sleep(10)
 
 logging.info('Stopped.')
-sys.exit(0)
+sys.exit()
