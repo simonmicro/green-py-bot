@@ -62,7 +62,7 @@ class Schedule:
         logging.debug('Running schedule for user id ' + str(self.__forUser.getUID()) + ', script ' + self.__forSkriptIdentifier)
 
         # Load the module
-        module = greenbot.repos.getModule(scriptIdentifier)
+        module = greenbot.repos.getModule(self.__forSkriptIdentifier)
 
         # And call the scheduled function (if available)
         if hasattr(module, 'scheduledRun'):
