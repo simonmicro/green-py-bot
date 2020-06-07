@@ -7,7 +7,7 @@ import greenbot.repos
 import greenbot.user
 
 # Prepare logger
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
 # Load config
 greenbot.config.load()
