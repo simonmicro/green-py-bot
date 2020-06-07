@@ -34,7 +34,7 @@ def script_info(update, context):
 
 def user_info(update, context):
     logging.debug('Command: user_info')
-    context.bot.send_message(chat_id=update.effective_chat.id, text='User info: ' + str(greenbot.user.User(update.message.chat.id).scripts))
+    context.bot.send_message(chat_id=update.effective_chat.id, text='User info: ' + str(greenbot.user.User(update.message.chat.id).getScripts()))
 
 def activate(update, context):
     logging.debug('Command: activate')
