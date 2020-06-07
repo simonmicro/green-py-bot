@@ -51,7 +51,7 @@ def info(update, context):
             scriptsStr = scriptsStr + user.getScriptSchedule(identifier).getLastRunEmoji() + ' ' + identifier + '\n'
         context.bot.send_message(chat_id=update.effective_chat.id, text=scriptsStr, parse_mode=telegram.ParseMode.MARKDOWN_V2)
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text='You have currently no scripts activated. Use /activate to begin your journey!')
+        context.bot.send_message(chat_id=update.effective_chat.id, text='You have currently no scripts activated ' + random.choice(['😢', '😱', '🥺']) + '. Use /activate to begin your journey!')
 
 def activate(update, context):
     logging.debug('Command: activate')
