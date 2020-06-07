@@ -5,6 +5,7 @@ import greenbot.config
 import greenbot.repos
 import greenbot.util
 import greenbot.user
+import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def start(update, context):
@@ -39,8 +40,11 @@ def script_info(update, context):
 
 def user_info(update, context):
     logging.debug('Command: user_info')
-    context.bot.send_message(chat_id=update.effective_chat.id, text='User info: scripts ' + str(greenbot.user.get(update.message.chat.id).getScripts()) +
-        ' uid ' + str(greenbot.user.get(update.message.chat.id).getUID()))
+    scriptsStr = '```\n'
+    for identifier in greenbot.user.get(update.message.chat.id).getScripts():
+        scriptsStr = scriptsStr + identifier + '\n'
+    scriptsStr = scriptsStr + '\n```'
+    context.bot.send_message(chat_id=update.effective_chat.id, text='User info: scripts ' + scriptsStr, parse_mode=telegram.ParseMode.MARKDOWN_V2)
 
 def activate(update, context):
     logging.debug('Command: activate')
