@@ -34,7 +34,7 @@ class User:
     def __write(self):
         scritpsData = {}
         for identifier in self.__scripts:
-            scritpsData[identifier] = {'schedule': self.__schedules[identifier].save()}
+            scritpsData[identifier] = {'schedule': self.getScriptSchedule(identifier).save()}
         writeme = json.dumps({
                 'scripts' : scritpsData
             }, sort_keys=True, indent=4)
@@ -45,7 +45,7 @@ class User:
 
     def activateScript(self, scriptIdentifier):
         self.__scripts.add(scriptIdentifier)
-        self.setScriptSchedule(scriptIdentifier, greenbot.schedule.Schedule())
+        self.setScriptSchedule(scriptIdentifier, self.getScriptSchedule(scriptIdentifier))
         self.__write()
         logging.debug('Activated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
@@ -61,7 +61,9 @@ class User:
         return self.__scripts
 
     def getScriptSchedule(self, scriptIdentifier):
-        return self.__schedules[scriptIdentifier]
+        if scriptIdentifier in self.__schedules:
+            return self.__schedules[scriptIdentifier]
+        return greenbot.schedule.Schedule()
 
     def setScriptSchedule(self, scriptIdentifier, schedule):
         self.__schedules[scriptIdentifier] = schedule
