@@ -19,7 +19,7 @@ class User:
         if os.path.isfile(self.__getConfigFileName()):
             with open(self.__getConfigFileName()) as file:
                 config = json.loads(file.read())
-                self.scripts = config['scripts']
+                self.scripts = list(set(config['scripts']))
 
     def __getConfigFileName(self):
         global userPath

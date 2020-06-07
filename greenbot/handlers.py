@@ -48,7 +48,7 @@ def activate(update, context):
         keyboard = []
         for repoName in greenbot.repos.getRepos():
             keyboard.append([InlineKeyboardButton(repoName, callback_data='{"cmd":"activate", "params": ["' + repoName + '"]}')])
-        greenbot.util.update_or_reply(update, 'Missing repo param. Please select repo', reply_markup=InlineKeyboardMarkup(keyboard))
+        greenbot.util.updateOrReply(update, 'Missing repo param. Please select repo', reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
     # Show keyboard for script (if not given)
@@ -57,12 +57,12 @@ def activate(update, context):
         keyboard = []
         for scriptName in greenbot.repos.getScripts(context.args[0]):
             keyboard.append([InlineKeyboardButton(scriptName, callback_data='{"cmd":"activate", "params": ["' + context.args[0] + '", "' + scriptName + '"]}')])
-        greenbot.util.update_or_reply(update, 'Missing script param. Please select script', reply_markup=InlineKeyboardMarkup(keyboard))
+        greenbot.util.updateOrReply(update, 'Missing script param. Please select script', reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
     # Okay, activate the script
-    greenbot.user.User(update.message.chat.id).activateScript(context.args[0], context.args[1])
-    greenbot.util.update_or_reply(update, 'OK: ' + context.args[0] + '/' + context.args[1])
+    greenbot.user.User(greenbot.util.getChatID(update)).activateScript(context.args[0], context.args[1])
+    greenbot.util.updateOrReply(update, 'OK: ' + context.args[0] + '/' + context.args[1])
 
 def keyboard_button(update, context):
     query = update.callback_query
@@ -75,7 +75,6 @@ def keyboard_button(update, context):
         if 'cmd' in msgData.keys():
             logging.debug('Found command data')
             context.args = msgData['params']
-            update.message = update.callback_query.message
             if msgData['cmd'] == 'activate':
                 activate(update, context)
             else:
