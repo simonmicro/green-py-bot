@@ -1,3 +1,4 @@
+import random
 import greenbot.repos
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -16,7 +17,7 @@ def getGlobalSkriptIdentifier(update, context, commandName):
         keyboard = []
         for repoName in greenbot.repos.getRepos():
             keyboard.append([InlineKeyboardButton(repoName, callback_data='{"cmd":"' + commandName + '", "params": ["' + greenbot.repos.makeIdentifier(repoName) + '"]}')])
-        greenbot.util.updateOrReply(update, 'Missing repo param. Please select repo', reply_markup=InlineKeyboardMarkup(keyboard))
+        greenbot.util.updateOrReply(update, 'Okay, now tell me in which repository I should look 🤔', reply_markup=InlineKeyboardMarkup(keyboard))
         return False
     # ...or the script part? (Intended, if we are showing the keyboard)
     elif not greenbot.repos.resolveIdentifier(context.args[0])[1] in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
@@ -24,7 +25,7 @@ def getGlobalSkriptIdentifier(update, context, commandName):
         keyboard = []
         for scriptName in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
             keyboard.append([InlineKeyboardButton(scriptName, callback_data='{"cmd":"' + commandName + '", "params": ["' + greenbot.repos.makeIdentifier(context.args[0], scriptName) + '"]}')])
-        greenbot.util.updateOrReply(update, 'Missing script param. Please select script', reply_markup=InlineKeyboardMarkup(keyboard))
+        greenbot.util.updateOrReply(update, 'And which script do you wish to activate ' + random.choice(['🧐', '🤨']) + '?', reply_markup=InlineKeyboardMarkup(keyboard))
         return False
 
     return context.args[0]

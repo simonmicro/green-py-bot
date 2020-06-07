@@ -10,7 +10,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def start(update, context):
     logging.debug('Command: start')
-    context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! I am a bot 😏, programmed to execute scripts by your schedule. To begin you should activate a new script with /activate. You can use /info to view all currently active scripts and their last execution result. If you don\'t find what you are looking for, maybe consider to program it yourself 💻! Its easy - It is just Python 🐍!')
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! I am a bot ' + random.choice(['😏', '🤪']) + ', programmed to execute scripts by your schedule. To begin you should activate a new script with /activate. You can use /info to view all currently active scripts and their last execution result. If you don\'t find what you are looking for, maybe consider to program it yourself 💻! Its easy - It is just Python 🐍!')
 
 def stop(update, context):
     logging.debug('Command: stop')
@@ -46,7 +46,7 @@ def info(update, context):
     logging.debug('Command: info')
     user = greenbot.user.get(update.message.chat.id)
     if len(user.getScripts()) > 0:
-        scriptsStr = 'Currently active scripts are:\n'
+        scriptsStr = 'Currently active scripts are:\n\n'
         for identifier in greenbot.user.get(update.message.chat.id).getScripts():
             scriptsStr = scriptsStr + user.getScriptSchedule(identifier).getLastRunEmoji() + ' ' + identifier + '\n'
         context.bot.send_message(chat_id=update.effective_chat.id, text=scriptsStr, parse_mode=telegram.ParseMode.MARKDOWN_V2)
@@ -62,7 +62,7 @@ def activate(update, context):
 
     # Okay, activate the script
     greenbot.user.get(update.effective_chat.id).activateScript(scriptIdentifier)
-    greenbot.util.updateOrReply(update, random.choice(['👻', '🥳', '😁']) + ' Yay, it has been activated! Now use 👉 /schedule ' + scriptIdentifier + ' 👈 to run it whenever you need...')
+    greenbot.util.updateOrReply(update, random.choice(['👻', '🥳', '😁']) + ' Yay, it has been activated! Now use 👉 /schedule ' + scriptIdentifier + ' 👈 to execute it whenever you need...')
 
 def schedule(update, context):
     logging.debug('Command: schedule')
