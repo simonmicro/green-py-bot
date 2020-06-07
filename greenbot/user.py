@@ -86,3 +86,11 @@ def get(uid):
     if not uid in userCache:
         userCache[uid] = User(uid)
     return userCache[uid]
+
+# And preload the cache (otherwise we would not activate the schedules correctly...)
+for (root, dirs, files) in os.walk(userPath):
+    for filename in files:
+        if filename.endswith('.json'):
+            # Okay, found a user id -> load it into the cache
+            get(filename[:-5])
+    break

@@ -66,6 +66,6 @@ class Schedule:
 
         # And call the scheduled function (if available)
         if hasattr(module, 'scheduledRun'):
-            module.scheduledRun(__forUser)
+            module.scheduledRun(self.__forUser)
         else:
             logging.error('Ooops, the script ' + self.__forSkriptIdentifier + ' has no scheduledRun(user) method!')
