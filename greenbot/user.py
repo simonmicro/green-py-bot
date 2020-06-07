@@ -47,7 +47,7 @@ class User:
     def activateScript(self, scriptIdentifier):
         self.__scripts.add(scriptIdentifier)
         self.setScriptSchedule(scriptIdentifier, self.getScriptSchedule(scriptIdentifier))
-        self.getScriptSchedule(scriptIdentifier).activate()
+        self.getScriptSchedule(scriptIdentifier).activate(self, scriptIdentifier)
         self.__write()
         logging.debug('Activated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
@@ -55,7 +55,7 @@ class User:
     def deactivateScript(self, scriptIdentifier):
         self.__scripts.remove(scriptIdentifier)
         # We are not deleting the schedule data here - just in case the user deactivated the script by accident
-        self.__schedules[scriptIdentifier].deactivate()
+        self.getScriptSchedule(scriptIdentifier).deactivate()
         self.__write()
         logging.debug('Deactivated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
@@ -70,7 +70,7 @@ class User:
 
     def setScriptSchedule(self, scriptIdentifier, newSchedule):
         # Deactivate current schedule
-        self.__schedules[scriptIdentifier].deactivate()
+        self.getScriptSchedule(scriptIdentifier).deactivate()
         # And install new schedule
         self.__schedules[scriptIdentifier] = newSchedule
         self.__write()
