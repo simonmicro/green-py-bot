@@ -9,18 +9,18 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def start(update, context):
     logging.debug('Command: start')
-    context.bot.send_message(chat_id=update.effective_chat.id, text='Hello world!')
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! I am a bot, programmed to execute scripts by schedule. To begin you should activate a new script with /activate. If you don\'t find what you are looking for, maybe consider to program it yourself! Its easy - I promise: It is just Python 🐍!')
 
 def stop(update, context):
     logging.debug('Command: stop')
-    context.bot.send_message(chat_id=update.effective_chat.id, text='Bye')
+    context.bot.send_message(chat_id=update.effective_chat.id, text='🆘 Initiating bot shutdown...')
     from greenbot.bot import stop
     stop()
 
 def next_run(update, context):
     logging.debug('Command: next_run')
     import schedule
-    context.bot.send_message(chat_id=update.effective_chat.id, text='Next run scheduled at ' + str(schedule.next_run()))
+    context.bot.send_message(chat_id=update.effective_chat.id, text='🕒 Next run scheduled at ' + str(schedule.next_run()))
 
 def list_repos(update, context):
     logging.debug('Command: list_repos')

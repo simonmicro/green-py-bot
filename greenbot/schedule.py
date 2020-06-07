@@ -67,7 +67,7 @@ class Schedule:
         elif self.__lastRunResult == 2:
             return '❌'
         else:
-            return '⁉️'
+            return '🔥'
 
     def run(self):
         logging.debug('Running schedule for user id ' + str(self.__forUser.getUID()) + ', script ' + self.__forSkriptIdentifier)
