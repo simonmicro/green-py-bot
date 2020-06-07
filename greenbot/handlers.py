@@ -65,7 +65,7 @@ def activate(update, context):
 
     # Okay, activate the script
     greenbot.user.get(update.effective_chat.id).activateScript(context.args[0], context.args[1])
-    greenbot.util.updateOrReply(update, 'OK: ' + context.args[0] + '/' + context.args[1])
+    greenbot.util.updateOrReply(update, 'OK: ' + greenbot.repos.makeIdentifier(context.args[0], context.args[1]))
 
 def deactivate(update, context):
     logging.debug('Command: deactivate')
@@ -78,13 +78,13 @@ def deactivate(update, context):
         # Show keyboard with key for every active script
         keyboard = []
         for repoName, scriptName in greenbot.user.get(update.effective_chat.id).getScripts():
-            keyboard.append([InlineKeyboardButton(repoName + '/' + scriptName, callback_data='{"cmd":"deactivate", "params": ["' + repoName + '", "' + scriptName + '"]}')])
+            keyboard.append([InlineKeyboardButton(greenbot.repos.makeIdentifier(repoName, scriptName), callback_data='{"cmd":"deactivate", "params": ["' + repoName + '", "' + scriptName + '"]}')])
         greenbot.util.updateOrReply(update, 'Missing repo and script param. Please select', reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
     # Okay, activate the script
     greenbot.user.get(update.effective_chat.id).deactivateScript(context.args[0], context.args[1])
-    greenbot.util.updateOrReply(update, 'OK: ' + context.args[0] + '/' + context.args[1])
+    greenbot.util.updateOrReply(update, 'OK: ' + greenbot.repos.makeIdentifier(context.args[0], context.args[1]))
 
 def keyboard_button(update, context):
     query = update.callback_query

@@ -52,3 +52,9 @@ def getModule(repoName, scriptName):
     modulePath = '.'.join([reposPath, repoName, scriptName])
     logging.debug('Importing ' + modulePath)
     return importlib.import_module(modulePath)
+
+def makeIdentifier(repoName, scriptName):
+    return repoName + '/' + scriptName
+
+def resolveIdentifier(identifier):
+    return identifier.split('/')
