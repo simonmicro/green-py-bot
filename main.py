@@ -4,12 +4,16 @@ import schedule
 import greenbot.config
 import greenbot.bot
 import greenbot.repos
+import greenbot.user
 
 # Prepare logger
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 # Load config
 greenbot.config.load()
+
+# And preload the user cache (otherwise we would not activate the schedules correctly...)
+greenbot.user.getAll()
 
 # Register bot and prepare handlers
 greenbot.bot.init()
