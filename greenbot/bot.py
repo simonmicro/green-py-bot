@@ -20,7 +20,7 @@ def init():
     updater.dispatcher.add_handler(CommandHandler('list_scripts', greenbot.handlers.list_scripts))
     updater.dispatcher.add_handler(CommandHandler('next_run', greenbot.handlers.next_run))
     updater.dispatcher.add_handler(CommandHandler('script_info', greenbot.handlers.script_info))
-    updater.dispatcher.add_handler(CommandHandler('user_info', greenbot.handlers.user_info))
+    updater.dispatcher.add_handler(CommandHandler('info', greenbot.handlers.info))
     updater.dispatcher.add_handler(CommandHandler('activate', greenbot.handlers.activate))
     updater.dispatcher.add_handler(CommandHandler('schedule', greenbot.handlers.schedule))
     updater.dispatcher.add_handler(CommandHandler('deactivate', greenbot.handlers.deactivate))

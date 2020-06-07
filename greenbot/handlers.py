@@ -9,7 +9,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def start(update, context):
     logging.debug('Command: start')
-    context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! I am a bot, programmed to execute scripts by schedule. To begin you should activate a new script with /activate. If you don\'t find what you are looking for, maybe consider to program it yourself! Its easy - I promise: It is just Python 🐍!')
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! I am a bot, programmed to execute scripts by your schedule. To begin you should activate a new script with /activate. You can use /info to view all currently active scripts and their last execution result. If you don\'t find what you are looking for, maybe consider to program it yourself! Its easy - It is just Python 🐍!')
 
 def stop(update, context):
     logging.debug('Command: stop')
@@ -41,8 +41,8 @@ def script_info(update, context):
 
     context.bot.send_message(chat_id=update.effective_chat.id, text=greenbot.repos.getModule(scriptIdentifier).info())
 
-def user_info(update, context):
-    logging.debug('Command: user_info')
+def info(update, context):
+    logging.debug('Command: info')
     user = greenbot.user.get(update.message.chat.id)
     if len(user.getScripts()) > 0:
         scriptsStr = 'Currently active scripts are:\n'
