@@ -94,7 +94,7 @@ def deactivate(update, context):
 def keyboard_button(update, context):
     import json
     query = update.callback_query
-    logging.debug('Callback: Keyboard button pressed' + str(query.data))
+    logging.debug('Callback: Keyboard button pressed ' + str(query.data))
     query.answer()
     # Now try to decode the packed data into commands and args
     try:
