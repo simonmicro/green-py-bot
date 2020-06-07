@@ -31,3 +31,5 @@ while greenbot.bot.updater.running:
     logging.debug('Executing pending jobs...')
     schedule.run_pending()
     time.sleep(60)
+
+logging.info('Stopped.')

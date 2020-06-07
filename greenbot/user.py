@@ -24,9 +24,8 @@ class User:
             with open(self.__getConfigFileName()) as file:
                 config = json.loads(file.read())
                 for identifier, settings in config['scripts'].items():
-                    self.__scripts.add(identifier)
-                    self.__schedules[identifier] = greenbot.schedule.Schedule(settings['schedule'])
-                    self.__schedules[identifier].activate(self, identifier)
+                    self.activateScript(identifier)
+                    self.setScriptSchedule(identifier, greenbot.schedule.Schedule(settings['schedule']))
 
     def __getConfigFileName(self):
         global userPath
