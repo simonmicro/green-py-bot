@@ -75,6 +75,7 @@ def keyboard_button(update, context):
         if 'cmd' in msgData.keys():
             logging.debug('Found command data')
             context.args = msgData['params']
+            update.message = update.callback_query.message
             if msgData['cmd'] == 'activate':
                 activate(update, context)
             else:
