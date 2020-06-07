@@ -49,7 +49,7 @@ def user_info(update, context):
 def activate(update, context):
     logging.debug('Command: activate')
 
-    scriptIdentifier = greenbot.util.getSkriptIdentifier(update, context, 'activate')
+    scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'activate')
     if not scriptIdentifier:
         return
 
@@ -60,7 +60,7 @@ def activate(update, context):
 def schedule(update, context):
     logging.debug('Command: schedule')
 
-    scriptIdentifier = greenbot.util.getSkriptIdentifier(update, context, 'schedule')
+    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'schedule')
     if not scriptIdentifier:
         return
 
@@ -73,13 +73,8 @@ def deactivate(update, context):
         greenbot.util.updateOrReply(update, 'No scripts active')
         return
 
-    # Show keyboard for active scripts
-    if len(context.args) < 1 or not greenbot.repos.validateIdentifier(context.args[0]):
-        # Show keyboard with key for every active script
-        keyboard = []
-        for scriptIdentifier in greenbot.user.get(update.effective_chat.id).getScripts():
-            keyboard.append([InlineKeyboardButton(scriptIdentifier, callback_data='{"cmd":"deactivate", "params": ["' + scriptIdentifier + '"]}')])
-        greenbot.util.updateOrReply(update, 'Missing repo and script param. Please select', reply_markup=InlineKeyboardMarkup(keyboard))
+    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'deactivate')
+    if not scriptIdentifier:
         return
 
     # Okay, activate the script

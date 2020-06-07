@@ -11,7 +11,7 @@ def updateOrReply(update, *args, **kwargs):
         # Okay, no callback -> reply with new msg
         return update.effective_message.reply_text(*args, **kwargs)
 
-def getSkriptIdentifier(update, context, commandName):
+def getGlobalSkriptIdentifier(update, context, commandName):
     # Are we missing the identifier or is it invalid?
     if len(context.args) < 1 or not greenbot.repos.resolveIdentifier(context.args[0])[0] in greenbot.repos.getRepos():
         keyboard = []
@@ -27,5 +27,17 @@ def getSkriptIdentifier(update, context, commandName):
             keyboard.append([InlineKeyboardButton(scriptName, callback_data='{"cmd":"' + commandName + '", "params": ["' + greenbot.repos.makeIdentifier(context.args[0], scriptName) + '"]}')])
         greenbot.util.updateOrReply(update, 'Missing script param. Please select script', reply_markup=InlineKeyboardMarkup(keyboard))
         return False
+
+    return context.args[0]
+
+def getUserSkriptIdentifier(update, context, commandName):
+    # Show keyboard for active scripts
+    if len(context.args) < 1 or not greenbot.repos.validateIdentifier(context.args[0]):
+        # Show keyboard with key for every active script
+        keyboard = []
+        for scriptIdentifier in greenbot.user.get(update.effective_chat.id).getScripts():
+            keyboard.append([InlineKeyboardButton(scriptIdentifier, callback_data='{"cmd":"' + commandName + '", "params": ["' + scriptIdentifier + '"]}')])
+        greenbot.util.updateOrReply(update, 'Missing skript identifier param. Please select from your active scripts', reply_markup=InlineKeyboardMarkup(keyboard))
+        return
 
     return context.args[0]
