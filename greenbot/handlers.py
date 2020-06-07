@@ -79,7 +79,7 @@ def schedule(update, context):
     # Are we missing the identifier or is it invalid?
     if len(context.args) < 1 or not greenbot.repos.validateIdentifier(context.args[0]):
         # Was the repo part empty?
-        if len(context.args) < 1 or len(greenbot.repos.resolveIdentifier(context.args[0])) < 1:
+        if len(context.args) < 1 or not greenbot.repos.resolveIdentifier(context.args[0])[0] in greenbot.repos.getRepos():
             keyboard = []
             for repoName in greenbot.repos.getRepos():
                 keyboard.append([InlineKeyboardButton(repoName, callback_data='{"cmd":"schedule", "params": ["' + greenbot.repos.makeIdentifier(repoName) + '"]}')])
@@ -87,7 +87,7 @@ def schedule(update, context):
             return
 
         # ...or the script part? (Intended, if we are showing the keyboard)
-        if len(greenbot.repos.resolveIdentifier(context.args[0])) < 2:
+        if not greenbot.repos.resolveIdentifier(context.args[0])[1] in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
             # Show keyboard with key for every script
             keyboard = []
             for scriptName in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):

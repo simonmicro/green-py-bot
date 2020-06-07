@@ -59,7 +59,13 @@ def makeIdentifier(repoName, scriptName = None):
     return repoName + '/' + scriptName
 
 def resolveIdentifier(identifier):
-    return identifier.split('/')
+    parts = identifier.split('/')
+    if len(parts) < 1:
+        return [None, None]
+    elif len(parts) < 2:
+        return [parts[0], None]
+    else:
+        return [parts[0], parts[1]]
 
 def validateIdentifier(identifier):
     parts = identifier.split('/')
