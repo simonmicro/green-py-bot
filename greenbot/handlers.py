@@ -1,4 +1,5 @@
 import logging
+import random
 import greenbot.config
 import greenbot.repos
 import greenbot.util
@@ -61,7 +62,7 @@ def activate(update, context):
 
     # Okay, activate the script
     greenbot.user.get(update.effective_chat.id).activateScript(scriptIdentifier)
-    greenbot.util.updateOrReply(update, 'ACTIVATED: ' + scriptIdentifier + '\nNow use /schedule ' + scriptIdentifier + ' to run it whenever you need...')
+    greenbot.util.updateOrReply(update, random.choice(['👻', '🥳', '😁']) + ' Yay, it has been activated! Now use /schedule ' + scriptIdentifier + ' to run it whenever you need...')
 
 def schedule(update, context):
     logging.debug('Command: schedule')
@@ -88,7 +89,7 @@ def deactivate(update, context):
 
     # Okay, activate the script
     greenbot.user.get(update.effective_chat.id).deactivateScript(context.args[0])
-    greenbot.util.updateOrReply(update, 'DEACTIVATED: ' + context.args[0])
+    greenbot.util.updateOrReply(update, random.choice(['💀', '💣', '😵']) + ' Bye ' + context.args[0] + '. It has been deactivated.')
 
 def keyboard_button(update, context):
     import json
