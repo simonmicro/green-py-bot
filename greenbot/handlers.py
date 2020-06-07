@@ -64,12 +64,16 @@ def activate(update, context):
 
 def deactivate(update, context):
     logging.debug('Command: deactivate')
+    user = greenbot.user.User(update.effective_chat.id)
+    if len(user.getScripts()) < 1:
+        greenbot.util.updateOrReply(update, 'No scripts active')
+        return
 
     # Show keyboard for active scripts
     if len(context.args) < 2:
         # Show keyboard with key for every active script
         keyboard = []
-        for repoName, scriptName in greenbot.user.User(update.effective_chat.id).getScripts():
+        for repoName, scriptName in user.getScripts():
             keyboard.append([InlineKeyboardButton(repoName + '/' + scriptName, callback_data='{"cmd":"deactivate", "params": ["' + repoName + '", "' + scriptName + '"]}')])
         greenbot.util.updateOrReply(update, 'Missing repo and script param. Please select', reply_markup=InlineKeyboardMarkup(keyboard))
         return
