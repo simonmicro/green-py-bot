@@ -12,7 +12,7 @@ os.makedirs(userPath, exist_ok=True)
 
 class User:
     __uid = None
-    __scripts = [] # Stores active script identifiers
+    __scripts = set() # Stores active script identifiers
     __schedules = {} # Stores schedule information for active script identifiers
 
     def __init__(self, uid):
@@ -23,8 +23,8 @@ class User:
         if os.path.isfile(self.__getConfigFileName()):
             with open(self.__getConfigFileName()) as file:
                 config = json.loads(file.read())
-                for identifier, settings in config['scripts']:
-                    self.__scripts.append(identifier)
+                for identifier, settings in config['scripts'].items():
+                    self.__scripts.add(identifier)
                     self.__schedules[identifier] = greenbot.schedule.Schedule(settings['schedule'])
 
     def __getConfigFileName(self):
@@ -43,28 +43,28 @@ class User:
         f.close()
         return
 
-    def activateScript(self, repo, script):
-        self.__scripts.append(greenbot.repos.makeIdentifier(repo, script))
-        self.setScriptSchedule(repo, script, greenbot.schedule.Schedule())
+    def activateScript(self, scriptIdentifier):
+        self.__scripts.add(scriptIdentifier)
+        self.setScriptSchedule(scriptIdentifier, greenbot.schedule.Schedule())
         self.__write()
+        logging.debug('Activated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
 
-    def deactivateScript(self, repo, script):
-        self.__scripts.remove(greenbot.repos.makeIdentifier(repo, script))
+    def deactivateScript(self, scriptIdentifier):
+        self.__scripts.remove(scriptIdentifier)
+        # We are not deleting the schedule data here - just in case the user deactivated the script by accident
         self.__write()
+        logging.debug('Deactivated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
 
     def getScripts(self):
-        returnme = []
-        for identifier in self.__scripts:
-            returnme.append(greenbot.repos.resolveIdentifier(identifier))
-        return returnme
+        return self.__scripts
 
-    def getScriptSchedule(self, repo, script):
-        return self.__schedules[greenbot.repos.makeIdentifier(repo, script)]
+    def getScriptSchedule(self, scriptIdentifier):
+        return self.__schedules[scriptIdentifier]
 
-    def setScriptSchedule(self, repo, script, schedule):
-        self.__schedules[greenbot.repos.makeIdentifier(repo, script)] = schedule
+    def setScriptSchedule(self, scriptIdentifier, schedule):
+        self.__schedules[scriptIdentifier] = schedule
 
     def getUID(self):
         return self.__uid
