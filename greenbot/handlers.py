@@ -77,23 +77,20 @@ def schedule(update, context):
     logging.debug('Command: schedule')
 
     # Are we missing the identifier or is it invalid?
-    if len(context.args) < 1 or not greenbot.repos.validateIdentifier(context.args[0]):
-        # Was the repo part empty?
-        if len(context.args) < 1 or not greenbot.repos.resolveIdentifier(context.args[0])[0] in greenbot.repos.getRepos():
-            keyboard = []
-            for repoName in greenbot.repos.getRepos():
-                keyboard.append([InlineKeyboardButton(repoName, callback_data='{"cmd":"schedule", "params": ["' + greenbot.repos.makeIdentifier(repoName) + '"]}')])
-            greenbot.util.updateOrReply(update, 'Missing repo param. Please select repo', reply_markup=InlineKeyboardMarkup(keyboard))
-            return
-
-        # ...or the script part? (Intended, if we are showing the keyboard)
-        if not greenbot.repos.resolveIdentifier(context.args[0])[1] in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
-            # Show keyboard with key for every script
-            keyboard = []
-            for scriptName in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
-                keyboard.append([InlineKeyboardButton(scriptName, callback_data='{"cmd":"schedule", "params": ["' + greenbot.repos.makeIdentifier(context.args[0], scriptName) + '"]}')])
-            greenbot.util.updateOrReply(update, 'Missing script param. Please select script', reply_markup=InlineKeyboardMarkup(keyboard))
-            return
+    if len(context.args) < 1 or not greenbot.repos.resolveIdentifier(context.args[0])[0] in greenbot.repos.getRepos():
+        keyboard = []
+        for repoName in greenbot.repos.getRepos():
+            keyboard.append([InlineKeyboardButton(repoName, callback_data='{"cmd":"schedule", "params": ["' + greenbot.repos.makeIdentifier(repoName) + '"]}')])
+        greenbot.util.updateOrReply(update, 'Missing repo param. Please select repo', reply_markup=InlineKeyboardMarkup(keyboard))
+        return
+    # ...or the script part? (Intended, if we are showing the keyboard)
+    elif not greenbot.repos.resolveIdentifier(context.args[0])[1] in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
+        # Show keyboard with key for every script
+        keyboard = []
+        for scriptName in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
+            keyboard.append([InlineKeyboardButton(scriptName, callback_data='{"cmd":"schedule", "params": ["' + greenbot.repos.makeIdentifier(context.args[0], scriptName) + '"]}')])
+        greenbot.util.updateOrReply(update, 'Missing script param. Please select script', reply_markup=InlineKeyboardMarkup(keyboard))
+        return
 
     scriptIdentifier = context.args[0]
 

@@ -68,11 +68,9 @@ def resolveIdentifier(identifier):
         return [parts[0], parts[1]]
 
 def validateIdentifier(identifier):
-    parts = identifier.split('/')
+    parts = resolveIdentifier(identifier)
     # Verify that all parts are there
-    if len(parts) != 2:
-        return False
-    if parts[0] == '' or parts[1] == '':
+    if parts[0] is None or parts[1] is None:
         return False
     # Make sure the repo is valid
     if not parts[0] in getRepos():
