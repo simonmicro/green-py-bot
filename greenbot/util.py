@@ -30,14 +30,14 @@ def getGlobalSkriptIdentifier(update, context, commandName):
 
     return context.args[0]
 
-def getUserSkriptIdentifier(update, context, commandName):
+def getUserSkriptIdentifier(update, context, commandName, missingIdentifierOut):
     # Show keyboard for active scripts
     if len(context.args) < 1 or not greenbot.repos.validateIdentifier(context.args[0]):
         # Show keyboard with key for every active script
         keyboard = []
         for scriptIdentifier in greenbot.user.get(update.effective_chat.id).getScripts():
             keyboard.append([InlineKeyboardButton(scriptIdentifier, callback_data='{"cmd":"' + commandName + '", "params": ["' + scriptIdentifier + '"]}')])
-        greenbot.util.updateOrReply(update, 'Yes, yes - I see. Which script should I ' + random.choice(['fire 😎', 'disable', 'remove']) + '?', reply_markup=InlineKeyboardMarkup(keyboard))
+        greenbot.util.updateOrReply(update, missingIdentifierOut, reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
     return context.args[0]

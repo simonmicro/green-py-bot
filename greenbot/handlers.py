@@ -67,7 +67,7 @@ def activate(update, context):
 def schedule(update, context):
     logging.debug('Command: schedule')
 
-    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'schedule')
+    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'schedule', 'Which from your scripts do you mean ' + random.choice(['🤔', '🤨']) + '?')
     if not scriptIdentifier:
         return
 
@@ -83,7 +83,7 @@ def deactivate(update, context):
         greenbot.util.updateOrReply(update, 'You have nothing to deactivate 🥶')
         return
 
-    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'deactivate')
+    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'deactivate', 'Yes, yes - I see. Which script should I ' + random.choice(['fire 😎', 'disable', 'remove']) + '?')
     if not scriptIdentifier:
         return
 
