@@ -16,9 +16,6 @@ def stop(update, context):
     from greenbot.bot import stop
     stop()
 
-def deactivate(update, context):
-    logging.debug('Command: deactivate')
-
 def list_repos(update, context):
     logging.debug('Command: list_repos')
     context.bot.send_message(chat_id=update.effective_chat.id, text='Available repos: ' + ' '.join(greenbot.repos.getRepos()))
@@ -64,6 +61,22 @@ def activate(update, context):
     greenbot.user.User(update.effective_chat.id).activateScript(context.args[0], context.args[1])
     greenbot.util.updateOrReply(update, 'OK: ' + context.args[0] + '/' + context.args[1])
 
+def deactivate(update, context):
+    logging.debug('Command: deactivate')
+
+    # Show keyboard for active scripts
+    if len(context.args) < 2:
+        # Show keyboard with key for every active script
+        keyboard = []
+        for repoName, scriptName in greenbot.user.User(update.effective_chat.id).getScripts():
+            keyboard.append([InlineKeyboardButton(repoName + '/' + scriptName, callback_data='{"cmd":"deactivate", "params": ["' + repoName + '", "' + scriptName + '"]}')])
+        greenbot.util.updateOrReply(update, 'Missing repo and script param. Please select', reply_markup=InlineKeyboardMarkup(keyboard))
+        return
+
+    # Okay, activate the script
+    greenbot.user.User(update.effective_chat.id).deactivateScript(context.args[0], context.args[1])
+    greenbot.util.updateOrReply(update, 'OK: ' + context.args[0] + '/' + context.args[1])
+
 def keyboard_button(update, context):
     query = update.callback_query
     logging.debug('Callback: Keyboard button pressed' + str(query.data))
@@ -77,6 +90,8 @@ def keyboard_button(update, context):
             context.args = msgData['params']
             if msgData['cmd'] == 'activate':
                 activate(update, context)
+            elif msgData['cmd'] == 'deactivate':
+                deactivate(update, context)
             else:
                 logging.error('Command not allowed inside callback!')
         else:

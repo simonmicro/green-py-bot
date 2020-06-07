@@ -43,3 +43,9 @@ class User:
         self.scripts.remove(repo + '/' + script)
         self.__write()
         return
+
+    def getScripts(self):
+        returnme = []
+        for path in self.scripts:
+            returnme.append(path.split('/'))
+        return returnme
