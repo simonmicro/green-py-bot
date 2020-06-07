@@ -22,9 +22,10 @@ def init():
     updater.dispatcher.add_handler(CommandHandler('script_info', greenbot.handlers.script_info))
     updater.dispatcher.add_handler(CommandHandler('user_info', greenbot.handlers.user_info))
     updater.dispatcher.add_handler(CommandHandler('activate', greenbot.handlers.activate))
-    updater.dispatcher.add_handler(CallbackQueryHandler(greenbot.handlers.keyboard_button))
+    updater.dispatcher.add_handler(CommandHandler('schedule', greenbot.handlers.schedule))
     updater.dispatcher.add_handler(CommandHandler('deactivate', greenbot.handlers.deactivate))
     updater.dispatcher.add_handler(CommandHandler('stop', greenbot.handlers.stop))
+    updater.dispatcher.add_handler(CallbackQueryHandler(greenbot.handlers.keyboard_button))
 
 def start():
     logging.info('Starting...')

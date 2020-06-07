@@ -53,12 +53,25 @@ def getModule(repoName, scriptName):
     logging.debug('Importing ' + modulePath)
     return importlib.import_module(modulePath)
 
-def makeIdentifier(repoName, scriptName):
+def makeIdentifier(repoName, scriptName = None):
+    if scriptName is None:
+        return repoName
     return repoName + '/' + scriptName
 
 def resolveIdentifier(identifier):
     return identifier.split('/')
 
 def validateIdentifier(identifier):
-    # TODO
+    parts = identifier.split('/')
+    # Verify that all parts are there
+    if len(parts) != 2:
+        return False
+    if parts[0] == '' or parts[1] == '':
+        return False
+    # Make sure the repo is valid
+    if not parts[0] in getRepos():
+        return False
+    # Make sure the script is valid
+    if not parts[1] in getScripts(parts[0]):
+        return False
     return True

@@ -67,9 +67,38 @@ def activate(update, context):
         greenbot.util.updateOrReply(update, 'Missing script param. Please select script', reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
+    skriptIdentifier = greenbot.repos.makeIdentifier(context.args[0], context.args[1])
+
     # Okay, activate the script
-    greenbot.user.get(update.effective_chat.id).activateScript(greenbot.repos.makeIdentifier(context.args[0], context.args[1]))
-    greenbot.util.updateOrReply(update, 'OK: ' + greenbot.repos.makeIdentifier(context.args[0], context.args[1]) + '\nNow use /schedule to run it whenever you need...')
+    greenbot.user.get(update.effective_chat.id).activateScript(skriptIdentifier)
+    greenbot.util.updateOrReply(update, 'ACTIVATED: ' + skriptIdentifier + '\nNow use /schedule ' + skriptIdentifier + ' to run it whenever you need...')
+
+def schedule(update, context):
+    logging.debug('Command: schedule')
+
+    # Are we missing the identifier or is it invalid?
+    if len(context.args) < 1 or not greenbot.repos.validateIdentifier(context.args[0]):
+        # Was the repo part empty?
+        if len(context.args) < 1 or len(greenbot.repos.resolveIdentifier(context.args[0])) < 1:
+            keyboard = []
+            for repoName in greenbot.repos.getRepos():
+                keyboard.append([InlineKeyboardButton(repoName, callback_data='{"cmd":"schedule", "params": ["' + greenbot.repos.makeIdentifier(repoName) + '"]}')])
+            greenbot.util.updateOrReply(update, 'Missing repo param. Please select repo', reply_markup=InlineKeyboardMarkup(keyboard))
+            return
+
+        # ...or the script part? (Intended, if we are showing the keyboard)
+        if len(greenbot.repos.resolveIdentifier(context.args[0])) < 2:
+            # Show keyboard with key for every script
+            keyboard = []
+            for scriptName in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
+                keyboard.append([InlineKeyboardButton(scriptName, callback_data='{"cmd":"schedule", "params": ["' + greenbot.repos.makeIdentifier(context.args[0], scriptName) + '"]}')])
+            greenbot.util.updateOrReply(update, 'Missing script param. Please select script', reply_markup=InlineKeyboardMarkup(keyboard))
+            return
+
+    scriptIdentifier = context.args[0]
+
+    # Okay, 
+    greenbot.util.updateOrReply(update, 'RESCHEDULED: ' + scriptIdentifier)
 
 def deactivate(update, context):
     logging.debug('Command: deactivate')
@@ -88,7 +117,7 @@ def deactivate(update, context):
 
     # Okay, activate the script
     greenbot.user.get(update.effective_chat.id).deactivateScript(context.args[0])
-    greenbot.util.updateOrReply(update, 'OK: ' + context.args[0])
+    greenbot.util.updateOrReply(update, 'DEACTIVATED: ' + context.args[0])
 
 def keyboard_button(update, context):
     query = update.callback_query
@@ -99,14 +128,16 @@ def keyboard_button(update, context):
         msgData = json.loads(query.data)
         # If successful: Test if the cmd param is set - if yes, forward respectively
         if 'cmd' in msgData.keys():
-            logging.debug('Found command data')
             context.args = msgData['params']
+            logging.debug('Found command data with params ' + str(context.args))
             if msgData['cmd'] == 'activate':
                 activate(update, context)
+            elif msgData['cmd'] == 'schedule':
+                schedule(update, context)
             elif msgData['cmd'] == 'deactivate':
                 deactivate(update, context)
             else:
-                logging.error('Command not allowed inside callback!')
+                logging.error('Command "' + msgData['cmd'] + '" not allowed inside callback!')
         else:
             logging.error('Keyboard press didn\'t contain any supported operation')
     except json.decoder.JSONDecodeError as e:
