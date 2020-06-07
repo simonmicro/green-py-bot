@@ -80,7 +80,7 @@ def schedule(update, context):
 def deactivate(update, context):
     logging.debug('Command: deactivate')
     if len(greenbot.user.get(update.effective_chat.id).getScripts()) < 1:
-        greenbot.util.updateOrReply(update, 'No scripts active')
+        greenbot.util.updateOrReply(update, 'You have nothing to deactivate 🥶')
         return
 
     scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'deactivate')
