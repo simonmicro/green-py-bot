@@ -15,7 +15,7 @@ def init():
     updater = Updater(token=greenbot.config.token, use_context=True)
 
     # Install handlers
-    updater.dispatcher.add_handler(CommandHandler('start', greenbot.handlers.start))
+    updater.dispatcher.add_handler(CommandHandler(['start', 'help'], greenbot.handlers.start))
     updater.dispatcher.add_handler(CommandHandler('list_repos', greenbot.handlers.list_repos))
     updater.dispatcher.add_handler(CommandHandler('list_scripts', greenbot.handlers.list_scripts))
     updater.dispatcher.add_handler(CommandHandler('next_run', greenbot.handlers.next_run))
