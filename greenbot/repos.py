@@ -58,3 +58,7 @@ def makeIdentifier(repoName, scriptName):
 
 def resolveIdentifier(identifier):
     return identifier.split('/')
+
+def validateIdentifier(identifier):
+    # TODO
+    return True

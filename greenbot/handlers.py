@@ -44,7 +44,7 @@ def user_info(update, context):
     for identifier in greenbot.user.get(update.message.chat.id).getScripts():
         scriptsStr = scriptsStr + identifier + '\n'
     scriptsStr = scriptsStr + '\n```'
-    context.bot.send_message(chat_id=update.effective_chat.id, text='User info: scripts ' + scriptsStr, parse_mode=telegram.ParseMode.MARKDOWN_V2)
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Currently active scripts ' + scriptsStr, parse_mode=telegram.ParseMode.MARKDOWN_V2)
 
 def activate(update, context):
     logging.debug('Command: activate')
@@ -59,7 +59,7 @@ def activate(update, context):
         return
 
     # Show keyboard for script (if not given)
-    if len(context.args) < 2:
+    if len(context.args) < 2 or not greenbot.repos.validateIdentifier(greenbot.repos.makeIdentifier(context.args[0], context.args[1])):
         # Show keyboard with key for every script
         keyboard = []
         for scriptName in greenbot.repos.getScripts(context.args[0]):
@@ -69,7 +69,7 @@ def activate(update, context):
 
     # Okay, activate the script
     greenbot.user.get(update.effective_chat.id).activateScript(greenbot.repos.makeIdentifier(context.args[0], context.args[1]))
-    greenbot.util.updateOrReply(update, 'OK: ' + greenbot.repos.makeIdentifier(context.args[0], context.args[1]))
+    greenbot.util.updateOrReply(update, 'OK: ' + greenbot.repos.makeIdentifier(context.args[0], context.args[1]) + '\nNow use /schedule to run it whenever you need...')
 
 def deactivate(update, context):
     logging.debug('Command: deactivate')
@@ -78,7 +78,7 @@ def deactivate(update, context):
         return
 
     # Show keyboard for active scripts
-    if len(context.args) < 1:
+    if len(context.args) < 1 or not greenbot.repos.validateIdentifier(context.args[0]):
         # Show keyboard with key for every active script
         keyboard = []
         for scriptIdentifier in greenbot.user.get(update.effective_chat.id).getScripts():
