@@ -49,29 +49,27 @@ def user_info(update, context):
 def activate(update, context):
     logging.debug('Command: activate')
 
-    # Show keyboard for repos (if not given)
-    if len(context.args) < 1:
-        # Show keyboard with key for every repo
+    # Are we missing the identifier or is it invalid?
+    if len(context.args) < 1 or not greenbot.repos.resolveIdentifier(context.args[0])[0] in greenbot.repos.getRepos():
         keyboard = []
         for repoName in greenbot.repos.getRepos():
-            keyboard.append([InlineKeyboardButton(repoName, callback_data='{"cmd":"activate", "params": ["' + repoName + '"]}')])
+            keyboard.append([InlineKeyboardButton(repoName, callback_data='{"cmd":"activate", "params": ["' + greenbot.repos.makeIdentifier(repoName) + '"]}')])
         greenbot.util.updateOrReply(update, 'Missing repo param. Please select repo', reply_markup=InlineKeyboardMarkup(keyboard))
         return
-
-    # Show keyboard for script (if not given)
-    if len(context.args) < 2 or not greenbot.repos.validateIdentifier(greenbot.repos.makeIdentifier(context.args[0], context.args[1])):
+    # ...or the script part? (Intended, if we are showing the keyboard)
+    elif not greenbot.repos.resolveIdentifier(context.args[0])[1] in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
         # Show keyboard with key for every script
         keyboard = []
-        for scriptName in greenbot.repos.getScripts(context.args[0]):
-            keyboard.append([InlineKeyboardButton(scriptName, callback_data='{"cmd":"activate", "params": ["' + context.args[0] + '", "' + scriptName + '"]}')])
+        for scriptName in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
+            keyboard.append([InlineKeyboardButton(scriptName, callback_data='{"cmd":"activate", "params": ["' + greenbot.repos.makeIdentifier(context.args[0], scriptName) + '"]}')])
         greenbot.util.updateOrReply(update, 'Missing script param. Please select script', reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
-    skriptIdentifier = greenbot.repos.makeIdentifier(context.args[0], context.args[1])
+    scriptIdentifier = context.args[0]
 
     # Okay, activate the script
-    greenbot.user.get(update.effective_chat.id).activateScript(skriptIdentifier)
-    greenbot.util.updateOrReply(update, 'ACTIVATED: ' + skriptIdentifier + '\nNow use /schedule ' + skriptIdentifier + ' to run it whenever you need...')
+    greenbot.user.get(update.effective_chat.id).activateScript(scriptIdentifier)
+    greenbot.util.updateOrReply(update, 'ACTIVATED: ' + scriptIdentifier + '\nNow use /schedule ' + scriptIdentifier + ' to run it whenever you need...')
 
 def schedule(update, context):
     logging.debug('Command: schedule')
