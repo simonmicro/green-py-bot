@@ -62,9 +62,9 @@ class Schedule:
     def getLastRunEmoji(self):
         if self.__lastRunResult == 0:
             return '✅'
-        if self.__lastRunResult == 1:
+        elif self.__lastRunResult == 1:
             return '⚠️'
-        if self.__lastRunResult == 2:
+        elif self.__lastRunResult == 2:
             return '❌'
         else:
             return '⁉️'
