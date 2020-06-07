@@ -47,9 +47,10 @@ def getScripts(repoName):
         break
     return scripts
 
-def getModule(repoName, scriptName):
+def getModule(identifier):
     global reposPath
-    modulePath = '.'.join([reposPath, repoName, scriptName])
+    (repoName, scriptName) = resolveIdentifier(identifier)
+    modulePath = '.'.join(reposPath.split('/')) + '.' + '.'.join([repoName, scriptName])
     logging.debug('Importing ' + modulePath)
     return importlib.import_module(modulePath)
 

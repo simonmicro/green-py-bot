@@ -34,9 +34,12 @@ def list_scripts(update, context):
 
 def script_info(update, context):
     logging.debug('Command: script_info')
-    if len(context.args) != 2:
-        context.bot.send_message(chat_id=update.effective_chat.id, text='Missing params: [repo] [script]')
-    context.bot.send_message(chat_id=update.effective_chat.id, text=greenbot.repos.getModule(context.args[0], context.args[1]).info())
+
+    scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'script_info')
+    if not scriptIdentifier:
+        return
+
+    context.bot.send_message(chat_id=update.effective_chat.id, text=greenbot.repos.getModule(scriptIdentifier).info())
 
 def user_info(update, context):
     logging.debug('Command: user_info')
@@ -98,6 +101,8 @@ def keyboard_button(update, context):
                 schedule(update, context)
             elif msgData['cmd'] == 'deactivate':
                 deactivate(update, context)
+            elif msgData['cmd'] == 'script_info':
+                script_info(update, context)
             else:
                 logging.error('Command "' + msgData['cmd'] + '" not allowed inside callback!')
         else:
