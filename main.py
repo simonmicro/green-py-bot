@@ -1,4 +1,5 @@
 import time
+import sys
 import logging
 import schedule
 import greenbot.config
@@ -33,3 +34,4 @@ while greenbot.bot.updater.running:
     time.sleep(60)
 
 logging.info('Stopped.')
+sys.exit(0)
