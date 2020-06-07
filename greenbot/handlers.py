@@ -39,8 +39,8 @@ def script_info(update, context):
 
 def user_info(update, context):
     logging.debug('Command: user_info')
-    context.bot.send_message(chat_id=update.effective_chat.id, text='User info: scripts ' + str(greenbot.user.User(update.message.chat.id).getScripts()) +
-        ' uid ' + str(greenbot.user.User(update.message.chat.id).getUID()))
+    context.bot.send_message(chat_id=update.effective_chat.id, text='User info: scripts ' + str(greenbot.user.get(update.message.chat.id).getScripts()) +
+        ' uid ' + str(greenbot.user.get(update.message.chat.id).getUID()))
 
 def activate(update, context):
     logging.debug('Command: activate')
@@ -64,13 +64,12 @@ def activate(update, context):
         return
 
     # Okay, activate the script
-    greenbot.user.User(update.effective_chat.id).activateScript(context.args[0], context.args[1])
+    greenbot.user.get(update.effective_chat.id).activateScript(context.args[0], context.args[1])
     greenbot.util.updateOrReply(update, 'OK: ' + context.args[0] + '/' + context.args[1])
 
 def deactivate(update, context):
     logging.debug('Command: deactivate')
-    user = greenbot.user.User(update.effective_chat.id)
-    if len(user.getScripts()) < 1:
+    if len(greenbot.user.get(update.effective_chat.id).getScripts()) < 1:
         greenbot.util.updateOrReply(update, 'No scripts active')
         return
 
@@ -78,13 +77,13 @@ def deactivate(update, context):
     if len(context.args) < 2:
         # Show keyboard with key for every active script
         keyboard = []
-        for repoName, scriptName in user.getScripts():
+        for repoName, scriptName in greenbot.user.get(update.effective_chat.id).getScripts():
             keyboard.append([InlineKeyboardButton(repoName + '/' + scriptName, callback_data='{"cmd":"deactivate", "params": ["' + repoName + '", "' + scriptName + '"]}')])
         greenbot.util.updateOrReply(update, 'Missing repo and script param. Please select', reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
     # Okay, activate the script
-    greenbot.user.User(update.effective_chat.id).deactivateScript(context.args[0], context.args[1])
+    greenbot.user.get(update.effective_chat.id).deactivateScript(context.args[0], context.args[1])
     greenbot.util.updateOrReply(update, 'OK: ' + context.args[0] + '/' + context.args[1])
 
 def keyboard_button(update, context):

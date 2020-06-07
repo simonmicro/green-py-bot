@@ -3,6 +3,7 @@ import json
 import logging
 
 userPath = 'data/user'
+userCache = {}
 
 # Make sure the data path exists
 os.makedirs(userPath, exist_ok=True)
@@ -52,3 +53,10 @@ class User:
 
     def getUID(self):
         return self.__uid
+
+def get(uid):
+    global userCache
+    # Return user from cache or load it freshly...
+    if not uid in userCache:
+        userCache[uid] = User(uid)
+    return userCache[uid]
