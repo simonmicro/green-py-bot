@@ -18,9 +18,13 @@ def update():
             # Dir is already there -> just update it
             logging.info('Updating repo ' + repoName + ' from ' + repoUrl)
             try:
+                # ...but first make sure the dir is really a git dir (otherwise ignore)
+                git.Repo(repoPath).git_dir
                 git.Git(repoPath).pull()
             except git.exc.GitCommandError as e:
                 logging.error('Could not update ' + repoName + ': ' + str(e))
+            except git.exc.InvalidGitRepositoryError:
+                pass
         else:
             logging.info('Cloning repo ' + repoName + ' from ' + repoUrl)
             os.mkdir(repoPath)
