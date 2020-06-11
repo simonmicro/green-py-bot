@@ -91,6 +91,7 @@ class User:
 
     def setCommandContext(self, cmd):
         self.__commandContext = cmd
+        self.write()
 
     def getCommandContext(self):
         return self.__commandContext

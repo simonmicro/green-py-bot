@@ -133,15 +133,27 @@ def schedule(update, context):
 
     # Apply the requested time change
     if context.args[1] == 'addTime':
-        scriptSchedule.addTime(context.args[2])
-        user.write()
+        if len(context.args) > 3:
+            scriptSchedule.addTime(context.args[2])
+            user.write()
+        else:
+            # No time given... Ask for one...
+            context.bot.send_message(chat_id=update.effective_chat.id, text='I am bread.')
+            return
+    if context.args[1] == 'delTime':
+        if len(context.args) > 3:
+            scriptSchedule.removeTime(context.args[2])
+            user.write()
+        else:
+            # No time given... Show list of available ones...
+            context.bot.send_message(chat_id=update.effective_chat.id, text='I am bread.')
+            return
 
     # Show menu for setting time/interval if called with editTime
     if context.args[1] == 'editTime' or context.args[1] == 'addTime' or context.args[1] == 'setInterval':
         keyboard = []
-        keyboard.append([InlineKeyboardButton('Add 00:00', callback_data='schedule ' + context.args[0] + ' addTime 00:00'),
-            InlineKeyboardButton('Add 08:00', callback_data='schedule ' + context.args[0] + ' addTime 08:00'),
-            InlineKeyboardButton('Add 12:00', callback_data='schedule ' + context.args[0] + ' addTime 12:00')])
+        keyboard.append([InlineKeyboardButton('Add', callback_data='schedule ' + context.args[0] + ' addTime'),
+            InlineKeyboardButton('Remove', callback_data='schedule ' + context.args[0] + ' delTime')])
         keyboard.append([InlineKeyboardButton('Back', callback_data='schedule ' + context.args[0])])
         greenbot.util.updateOrReply(update, '🕒 The current schedule is ' + str(scriptSchedule), reply_markup=InlineKeyboardMarkup(keyboard))
         return
