@@ -91,6 +91,9 @@ class Schedule:
         self.__times.remove(time)
         self.__apply()
 
+    def getTimes(self):
+        return self.__times
+
     def getInterval(self):
         return self.__interval
 

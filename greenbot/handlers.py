@@ -133,7 +133,7 @@ def schedule(update, context):
 
     # Apply the requested time change
     if context.args[1] == 'addTime':
-        if len(context.args) > 3:
+        if len(context.args) > 2:
             scriptSchedule.addTime(context.args[2])
             user.write()
         else:
@@ -141,16 +141,23 @@ def schedule(update, context):
             context.bot.send_message(chat_id=update.effective_chat.id, text='I am bread.')
             return
     if context.args[1] == 'delTime':
-        if len(context.args) > 3:
+        if len(context.args) > 2:
             scriptSchedule.removeTime(context.args[2])
             user.write()
         else:
             # No time given... Show list of available ones...
-            context.bot.send_message(chat_id=update.effective_chat.id, text='I am bread.')
-            return
+            if len(scriptSchedule.getTimes()) > 1:
+                keyboard = []
+                for time in scriptSchedule.getTimes():
+                    keyboard.append([InlineKeyboardButton(time, callback_data='schedule ' + context.args[0] + ' delTime ' + time)])
+                keyboard.append([InlineKeyboardButton('Back', callback_data='schedule ' + context.args[0] + ' editTime')])
+                greenbot.util.updateOrReply(update, 'Which one do you want to remove?', reply_markup=InlineKeyboardMarkup(keyboard))
+                return
+            else:
+                context.bot.send_message(chat_id=update.effective_chat.id, text='At least one execution time is needed!')                
 
     # Show menu for setting time/interval if called with editTime
-    if context.args[1] == 'editTime' or context.args[1] == 'addTime' or context.args[1] == 'setInterval':
+    if context.args[1] == 'editTime' or context.args[1] == 'addTime' or context.args[1] == 'delTime' or context.args[1] == 'setInterval':
         keyboard = []
         keyboard.append([InlineKeyboardButton('Add', callback_data='schedule ' + context.args[0] + ' addTime'),
             InlineKeyboardButton('Remove', callback_data='schedule ' + context.args[0] + ' delTime')])
