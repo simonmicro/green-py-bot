@@ -26,6 +26,7 @@ def getGlobalSkriptIdentifier(update, context, commandName, missingRepoOut = 'Ok
         keyboard = []
         for scriptName in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
             keyboard.append([InlineKeyboardButton(scriptName, callback_data=commandName + ' ' + greenbot.repos.makeIdentifier(context.args[0], scriptName))])
+        keyboard.append([InlineKeyboardButton('Back', callback_data=commandName)])
         greenbot.util.updateOrReply(update, missingScriptOut, reply_markup=InlineKeyboardMarkup(keyboard))
         return False
 
