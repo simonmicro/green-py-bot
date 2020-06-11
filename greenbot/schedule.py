@@ -109,10 +109,24 @@ class Schedule:
                 self.__jobs.append(schedule.every(self.__interval).minutes.do(Schedule.run, self))
             else:
                 for dayId in self.__days:
-                    print('Activating for day id ' + str(dayId))
+                    job = schedule.every()
+                    if dayId == 0:
+                        job = job.monday
+                    elif dayId == 1:
+                        job = job.tuesday
+                    elif dayId == 2:
+                        job = job.wednesday
+                    elif dayId == 3:
+                        job = job.thursday
+                    elif dayId == 4:
+                        job = job.friday
+                    elif dayId == 5:
+                        job = job.saturday
+                    elif dayId == 6:
+                        job = job.sunday
                     for time in self.__times:
-                        print('for time ' + time)
-                        self.__jobs.append(schedule.every().monday.at(time).do(Schedule.run, self))
+                        job = job.at(time).do(Schedule.run, self)
+                    self.__jobs.append(job)
             logging.debug('Activated schedule for user id ' + str(self.__forUser.getUID()) + ', script ' + self.__forSkriptIdentifier)
 
     def activate(self, user, skriptIdentifier):
