@@ -24,7 +24,7 @@ def update():
             except git.exc.GitCommandError as e:
                 logging.error('Could not update ' + repoName + ': ' + str(e))
             except git.exc.InvalidGitRepositoryError:
-                pass
+                logging.warn('The local copy of ' + repoName + ' is not a Git repo!')
         else:
             logging.info('Cloning repo ' + repoName + ' from ' + repoUrl)
             os.mkdir(repoPath)
