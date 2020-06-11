@@ -3,10 +3,11 @@ import logging
 import greenbot.repos
 
 class Schedule:
-    __days = [0, 1, 2, 3, 4, 5, 6] # 0-6 are the weekdays
-    __interval = 10 # Run every 10 minutes, if zero the times array will be used
-    __times = ['00:00']
-    __job = None
+    __days = set([0, 1, 2, 3, 4, 5, 6]) # 0-6 are the weekdays
+    __times = set(['00:00'])
+    __interval = 10
+    __useInterval = False
+    __jobs = []
     __forSkriptIdentifier = None
     __forUser = None
     __lastRunResult = 1 # 0 = Success, 1 = Warning, 2 = Failed
@@ -18,21 +19,25 @@ class Schedule:
         return
 
     def load(self, obj):
-        self.__days = obj['days']
+        self.__days = set(obj['days'])
         self.__interval = obj['interval']
-        self.__times = obj['times']
+        self.__useInterval = obj['useInterval']
+        self.__times = set(obj['times'])
 
     def save(self):
         return {
-            'days': self.__days,
+            'days': list(self.__days),
             'interval': self.__interval,
-            'times': self.__times,
+            'useInterval': self.__useInterval,
+            'times': list(self.__times),
         }
 
     def __str__(self):
         return self.toString()
 
     def toString(self):
+        if self.__useInterval:
+            return 'every ' + str(self.__interval) + ' minutes'
         return self.daysToString() + ' ' + self.timeToString()
 
     def daysToString(self):
@@ -41,9 +46,7 @@ class Schedule:
         return ', '.join(self.dayToString(x) for x in self.__days)
 
     def timeToString(self):
-        if self.__interval <= 0:
             return 'at ' + ', '.join(self.__times)
-        return 'every ' + str(self.__interval) + ' minutes'
 
     @staticmethod
     def dayToString(dayId):
@@ -74,21 +77,42 @@ class Schedule:
         if dayId in self.__days:
             self.__days.remove(dayId)
         else:
-            self.__days.append(dayId)
+            self.__days.add(dayId)
         self.__apply()
 
     def addTime(self, time):
-        self.__times.append(time)
+        self.__times.add(time)
+        self.__apply()
+
+    def removeTime(self, time):
+        self.__times.remove(time)
+        self.__apply()
 
     def getInterval(self):
         return self.__interval
+
+    def enableInterval(self):
+        self.__useInterval = True
+
+    def enableDayTime(self):
+        self.__useInterval = False
+
+    def usesInterval(self):
+        return self.__useInterval
 
     def __apply(self):
         self.deactivate()
 
         # Create new job...
         if self.__forUser is not None and self.__forSkriptIdentifier is not None:
-            self.__job = schedule.every().minute.do(Schedule.run, self)
+            if self.__useInterval:
+                self.__jobs.append(schedule.every(self.__interval).minutes.do(Schedule.run, self))
+            else:
+                for dayId in self.__days:
+                    print('Activating for day id ' + str(dayId))
+                    for time in self.__times:
+                        print('for time ' + time)
+                        self.__jobs.append(schedule.every().monday.at(time).do(Schedule.run, self))
             logging.debug('Activated schedule for user id ' + str(self.__forUser.getUID()) + ', script ' + self.__forSkriptIdentifier)
 
     def activate(self, user, skriptIdentifier):
@@ -101,9 +125,10 @@ class Schedule:
 
     def deactivate(self):
         # Remove old job (if existent)
-        if self.__job is not None:
-            schedule.cancel_job(self.__job)
-            self.__job = None
+        if len(self.__jobs) != 0:
+            for job in self.__jobs:
+                schedule.cancel_job(job)
+            self.__jobs = []
             logging.debug('Deactivated schedule for user id ' + str(self.__forUser.getUID()) + ', script ' + self.__forSkriptIdentifier)
 
     def getLastRunEmoji(self):

@@ -31,7 +31,7 @@ class User:
         global userPath
         return os.path.join(userPath, str(self.__uid) + '.json')
 
-    def __write(self):
+    def write(self):
         scritpsData = {}
         for identifier in self.__scripts:
             scritpsData[identifier] = {'schedule': self.getScriptSchedule(identifier).save()}
@@ -47,7 +47,7 @@ class User:
         self.__scripts.add(scriptIdentifier)
         self.setScriptSchedule(scriptIdentifier, self.getScriptSchedule(scriptIdentifier))
         self.getScriptSchedule(scriptIdentifier).activate(self, scriptIdentifier)
-        self.__write()
+        self.write()
         logging.debug('Activated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
 
@@ -55,7 +55,7 @@ class User:
         self.__scripts.remove(scriptIdentifier)
         # We are not deleting the schedule data here - just in case the user deactivated the script by accident
         self.getScriptSchedule(scriptIdentifier).deactivate()
-        self.__write()
+        self.write()
         logging.debug('Deactivated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
 
@@ -72,7 +72,7 @@ class User:
         self.getScriptSchedule(scriptIdentifier).deactivate()
         # And install new schedule
         self.__schedules[scriptIdentifier] = newSchedule
-        self.__write()
+        self.write()
         newSchedule.activate(self, scriptIdentifier)
         logging.debug('Rescheduled ' + scriptIdentifier + ' for user ' + str(self.__uid))
 
