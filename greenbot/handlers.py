@@ -154,7 +154,8 @@ def schedule(update, context):
                 greenbot.util.updateOrReply(update, 'Which one do you want to remove?', reply_markup=InlineKeyboardMarkup(keyboard))
                 return
             else:
-                context.bot.send_message(chat_id=update.effective_chat.id, text='At least one execution time is needed!')                
+                context.bot.send_message(chat_id=update.effective_chat.id, text='At least one execution time is needed!')          
+                return      
 
     # Show menu for setting time/interval if called with editTime
     if context.args[1] == 'editTime' or context.args[1] == 'addTime' or context.args[1] == 'delTime' or context.args[1] == 'setInterval':
