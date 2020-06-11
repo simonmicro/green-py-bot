@@ -1,4 +1,5 @@
 import random
+import logging
 import greenbot.repos
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -46,3 +47,22 @@ def getUserSkriptIdentifier(update, context, commandName, missingIdentifierOut):
         return
 
     return context.args[0]
+
+def executeVirtualCommand(update, context, cmdStr):
+    import greenbot.handlers
+
+    # Now try to decode the packed data into commands and args
+    msgData = cmdStr.split(' ')
+    cmd = msgData[0]
+    context.args = msgData[1:]
+    logging.debug('Found command ' + cmd + ' with params ' + str(context.args))
+    if cmd == 'activate':
+        greenbot.handlers.activate(update, context)
+    elif cmd == 'schedule':
+        greenbot.handlers.schedule(update, context)
+    elif cmd == 'deactivate':
+        greenbot.handlers.deactivate(update, context)
+    elif cmd == 'script_info':
+        greenbot.handlers.script_info(update, context)
+    else:
+        logging.error('Command "' + cmd + '" not allowed inside callback!')

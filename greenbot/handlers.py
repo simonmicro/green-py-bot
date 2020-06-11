@@ -26,10 +26,6 @@ def stop(update, context):
     from greenbot.bot import stop
     stop()
 
-def onError(update, context):
-    greenbot.util.updateOrReply(update, random.choice(['🤯', '🤬', '😬', '🥴']) + ' I am broken...')
-    raise context.error
-
 def list_repos(update, context):
     logging.debug('Command: list_repos')
     context.bot.send_message(chat_id=update.effective_chat.id, text='Available repos: ' + ' '.join(greenbot.repos.getRepos()))
@@ -146,23 +142,17 @@ def deactivate(update, context):
     greenbot.user.get(update.effective_chat.id).deactivateScript(context.args[0])
     greenbot.util.updateOrReply(update, random.choice(['💀', '💣', '😵']) + ' Bye ' + context.args[0] + '. You have been deactivated.')
 
-def keyboard_button(update, context):
+def onError(update, context):
+    greenbot.util.updateOrReply(update, random.choice(['🤯', '🤬', '😬', '🥴']) + ' I am broken...')
+    raise context.error
+
+def onButton(update, context):
     query = update.callback_query
     logging.debug('Callback: Keyboard button pressed ' + str(query.data))
     query.answer()
+    greenbot.util.executeVirtualCommand(update, context, query.data)
 
-    # Now try to decode the packed data into commands and args
-    msgData = query.data.split(' ')
-    cmd = msgData[0]
-    context.args = msgData[1:]
-    logging.debug('Found command ' + cmd + ' with params ' + str(context.args))
-    if cmd == 'activate':
-        activate(update, context)
-    elif cmd == 'schedule':
-        schedule(update, context)
-    elif cmd == 'deactivate':
-        deactivate(update, context)
-    elif cmd == 'script_info':
-        script_info(update, context)
-    else:
-        logging.error('Command "' + cmd + '" not allowed inside callback!')
+def onMessage(update, context):
+    if greenbot.user.get(update.message.chat.id).getCommandContext() is not None:
+        greenbot.util.executeVirtualCommand(update, context, query.data + ' ' + update.message.text)
+    # Othersie we will just ignore the msg of the user...
