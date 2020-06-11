@@ -27,6 +27,9 @@ def init():
     updater.dispatcher.add_handler(CommandHandler('stop', greenbot.handlers.stop))
     updater.dispatcher.add_handler(CallbackQueryHandler(greenbot.handlers.keyboard_button))
 
+    # And error handlers...
+    updater.dispatcher.add_error_handler(greenbot.handlers.onError)
+
 def start():
     logging.info('Starting...')
     global updater

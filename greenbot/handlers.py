@@ -18,6 +18,10 @@ def stop(update, context):
     from greenbot.bot import stop
     stop()
 
+def onError(update, context):
+    greenbot.util.updateOrReply(update, random.choice(['🤯', '🤬', '🥺']) + ' I am broken...')
+    raise context.error
+
 def next_run(update, context):
     logging.debug('Command: next_run')
     import schedule
