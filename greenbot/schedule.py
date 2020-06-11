@@ -4,7 +4,7 @@ import greenbot.repos
 
 class Schedule:
     __days = [0, 1, 2, 3, 4, 5, 6] # 0-6 are the weekdays
-    __interval = 10 # Run every 10 minutes, if < 0 the times array will be used
+    __interval = 10 # Run every 10 minutes, if zero the times array will be used
     __times = ['00:00']
     __job = None
     __forSkriptIdentifier = None
@@ -33,12 +33,17 @@ class Schedule:
         return self.toString()
 
     def toString(self):
-        return self.daysToString() + ' times: ' + str(self.__times) + ' or interval: ' + str(self.__interval)
+        return self.daysToString() + ' ' + self.timeToString()
 
     def daysToString(self):
         if len(self.__days) == 7:
             return 'every day'
         return ', '.join(self.dayToString(x) for x in self.__days)
+
+    def timeToString(self):
+        if self.__interval <= 0:
+            return 'at ' + ', '.join(self.__times)
+        return 'every ' + str(self.__interval) + ' minutes'
 
     @staticmethod
     def dayToString(dayId):
