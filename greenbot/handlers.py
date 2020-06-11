@@ -73,9 +73,7 @@ def schedule(update, context):
 
     # Show the current schedule if no params are given
     if len(context.args) < 2:
-        keyboard = []
-        keyboard.append([InlineKeyboardButton('Edit days', callback_data='schedule ' + context.args[0] + ' editDays')])
-        keyboard.append([InlineKeyboardButton('Edit time', callback_data='schedule ' + context.args[0] + ' editTime')])
+        keyboard = [[InlineKeyboardButton('Edit days', callback_data='schedule ' + context.args[0] + ' editDays'), InlineKeyboardButton('Edit time', callback_data='schedule ' + context.args[0] + ' editTime')]]
         greenbot.util.updateOrReply(update, '🕒 The current schedule is ' + str(greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier)), reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
@@ -94,9 +92,22 @@ def schedule(update, context):
                 sign = '❌'
             keyboard.append([InlineKeyboardButton(sign + ' ' + greenbot.schedule.Schedule.dayToString(dayId) + ' ' + sign, callback_data='schedule ' + context.args[0] + ' toggleDay ' + str(dayId))])
         keyboard.append([InlineKeyboardButton('Back', callback_data='schedule ' + context.args[0])])
-        greenbot.util.updateOrReply(update, 'Lets change the active days...', reply_markup=InlineKeyboardMarkup(keyboard))
+        greenbot.util.updateOrReply(update, 'Select your active days...', reply_markup=InlineKeyboardMarkup(keyboard))
+
+    # Apply the requested time change
+    if context.args[1] == 'setInterval':
+        greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier).setInterval(int(context.args[2]))
+    if context.args[1] == 'addTime':
+        greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier).setInterval(0)
+        greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier).addTime(context.args[2])
 
     # Show menu for setting time/interval if called with editTime
+    if context.args[1] == 'editTime' or context.args[1] == 'addTime' or context.args[1] == 'setInterval':
+        keyboard = []
+        keyboard.append([InlineKeyboardButton('At 00:00', callback_data='schedule ' + context.args[0] + ' addTime 00:00'), InlineKeyboardButton('Every 10 minutes', callback_data='schedule ' + context.args[0] + ' setInterval 10')])
+        keyboard.append([InlineKeyboardButton('Back', callback_data='schedule ' + context.args[0])])
+        greenbot.util.updateOrReply(update, '🕒 The current schedule is ' + str(greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier)), reply_markup=InlineKeyboardMarkup(keyboard))
+        return
 
     # Reschedule it for now to run it every minute
     #newSchedule = greenbot.schedule.Schedule()

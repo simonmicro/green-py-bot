@@ -75,6 +75,10 @@ class Schedule:
             self.__days.remove(dayId)
         else:
             self.__days.append(dayId)
+        self.__apply()
+
+    def addTime(self, time):
+        self.__times.append(time)
 
     def getInterval(self):
         return self.__interval
