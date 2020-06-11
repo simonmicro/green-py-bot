@@ -52,7 +52,7 @@ def info(update, context):
     if len(user.getScripts()) > 0:
         scriptsStr = 'Currently active scripts are:\n\n'
         for identifier in greenbot.user.get(update.message.chat.id).getScripts():
-            scriptsStr = scriptsStr + user.getScriptSchedule(identifier).getLastRunEmoji() + ' ' + identifier + '\n'
+            scriptsStr = scriptsStr + user.getScriptSchedule(identifier).getLastRunEmoji() + ' ' + identifier + ' \(' + str(user.getScriptSchedule(identifier)) + '\)\n'
         context.bot.send_message(chat_id=update.effective_chat.id, text=scriptsStr, parse_mode=telegram.ParseMode.MARKDOWN_V2)
     else:
         context.bot.send_message(chat_id=update.effective_chat.id, text='You have currently no scripts activated ' + random.choice(['😢', '😱', '🥺']) + '. Use /activate to begin your journey!')
