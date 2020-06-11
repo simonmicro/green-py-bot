@@ -78,18 +78,28 @@ def schedule(update, context):
     scriptSchedule = user.getScriptSchedule(scriptIdentifier)
 
     # Show the current schedule if no params are given
-    if len(context.args) == 2:
+    if len(context.args) >= 2:
         if context.args[1] == 'useInterval':
             scriptSchedule.enableInterval()
             user.write()
         elif context.args[1] == 'useDayTime':
             scriptSchedule.enableDayTime()
             user.write()
+        elif context.args[1] == 'setInterval':
+            # Did the user already appended his new interval?
+            if len(context.args) == 3:
+                scriptSchedule.setInterval(int(context.args[2]))
+                user.write()
+            else:
+                # No -> update the command context so the user can send his input into this command
+                user.setCommandContext('schedule ' + context.args[0] + ' setInterval')
+                greenbot.util.updateOrReply(update, 'Okay, send me now the new interval in minutes!')
+                return
 
-    if len(context.args) < 2 or context.args[1] == 'useInterval' or context.args[1] == 'useDayTime':
+    if len(context.args) < 2 or context.args[1] == 'useInterval' or context.args[1] == 'useDayTime' or context.args[1] == 'setInterval':
         keyboard = []
         if scriptSchedule.usesInterval():
-            keyboard.append([InlineKeyboardButton('~ Not implemented yet ~', callback_data='42')])
+            keyboard.append([InlineKeyboardButton('Change interval', callback_data='schedule ' + context.args[0] + ' setInterval')])
             keyboard.append([InlineKeyboardButton('Switch to day/time', callback_data='schedule ' + context.args[0] + ' useDayTime')])
         else:
             keyboard.append([InlineKeyboardButton('Edit days', callback_data='schedule ' + context.args[0] + ' editDays'),
@@ -155,6 +165,7 @@ def onButton(update, context):
 def onMessage(update, context):
     if greenbot.user.get(update.message.chat.id).getCommandContext() is not None:
         # Always reset the context before executing the virtual command with the context
+        cmdContext = greenbot.user.get(update.message.chat.id).getCommandContext()
         greenbot.user.get(update.message.chat.id).setCommandContext(None)
-        greenbot.util.executeVirtualCommand(update, context, query.data + ' ' + update.message.text)
+        greenbot.util.executeVirtualCommand(update, context, cmdContext + ' ' + update.message.text)
     # Otherwise we will just ignore the msg of the user...
