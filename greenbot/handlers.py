@@ -66,7 +66,7 @@ def activate(update, context):
 
     # Okay, activate the script
     greenbot.user.get(update.effective_chat.id).activateScript(scriptIdentifier)
-    greenbot.util.updateOrReply(update, random.choice(['👻', '🥳', '😁']) + ' Yay, it has been activated! Now use 👉 /schedule ' + scriptIdentifier + ' 👈 to execute it whenever you need...')
+    greenbot.util.updateOrReply(update, random.choice(['👻', '🥳', '😁']) + ' Yay, it has been activated! Now use 👉 /schedule ' + scriptIdentifier + ' 👈 to execute it whenever you need (its currently scheduled ' + str(greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier)) + ')...')
 
 def schedule(update, context):
     logging.debug('Command: schedule')
