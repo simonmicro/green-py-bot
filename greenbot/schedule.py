@@ -33,7 +33,7 @@ class Schedule:
         return self.toString()
 
     def toString(self):
-        return 'days: ' + self.daysToString() + ' times: ' + str(self.__times) + ' or interval: ' + str(self.__interval)
+        return self.daysToString() + ' times: ' + str(self.__times) + ' or interval: ' + str(self.__interval)
 
     def daysToString(self):
         if len(self.__days) == 7:

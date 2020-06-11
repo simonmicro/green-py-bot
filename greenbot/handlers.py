@@ -93,6 +93,7 @@ def schedule(update, context):
             else:
                 sign = '❌'
             keyboard.append([InlineKeyboardButton(sign + ' ' + greenbot.schedule.Schedule.dayToString(dayId) + ' ' + sign, callback_data='schedule ' + context.args[0] + ' toggleDay ' + str(dayId))])
+        keyboard.append([InlineKeyboardButton('Back', callback_data='schedule ' + context.args[0])])
         greenbot.util.updateOrReply(update, 'Lets change the active days...', reply_markup=InlineKeyboardMarkup(keyboard))
 
     # Show menu for setting time/interval if called with editTime
