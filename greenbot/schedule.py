@@ -30,7 +30,32 @@ class Schedule:
         }
 
     def __str__(self):
-        return 'days: ' + str(self.__days) + ' times: ' + str(self.__times) + ' or interval: ' + str(self.__interval)
+        return self.toString()
+
+    def toString(self):
+        return 'days: ' + self.daysToString() + ' times: ' + str(self.__times) + ' or interval: ' + str(self.__interval)
+
+    def daysToString(self):
+        if len(self.__days) == 7:
+            return 'every day'
+        return ', '.join(self.dayToString(x) for x in self.__days)
+
+    def dayToString(self, dayId):
+        if dayId == 0:
+            return 'Monday'
+        if dayId == 1:
+            return 'Tuesday'
+        if dayId == 2:
+            return 'Wednesday'
+        if dayId == 3:
+            return 'Thursday'
+        if dayId == 4:
+            return 'Friday'
+        if dayId == 5:
+            return 'Saturday'
+        if dayId == 6:
+            return 'Sunday'
+        return 'Unknown'
 
     def setInterval(self, interval):
         self.__interval = interval

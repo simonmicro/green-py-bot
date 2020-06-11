@@ -72,9 +72,19 @@ def schedule(update, context):
         return
 
     # Show the current schedule if no params are given
-    greenbot.util.updateOrReply(update, '🕒 The current schedule is ' + str(greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier)))
+    if len(context.args) < 2:
+        keyboard = []
+        keyboard.append([InlineKeyboardButton('Edit days', callback_data='{"cmd":"schedule", "params": ["' + context.args[0] + '", "editDays"]}')])
+        keyboard.append([InlineKeyboardButton('Edit time', callback_data='{"cmd":"schedule", "params": ["' + context.args[0] + '", "editTime"]}')])
+        greenbot.util.updateOrReply(update, '🕒 The current schedule is ' + str(greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier)), reply_markup=InlineKeyboardMarkup(keyboard))
+        return
 
     # Show menu for setting day(s) if called with editDays
+    if context.args[1] == 'editDays':
+        keyboard = []
+        for dayId in range(0, 6):
+            keyboard.append([InlineKeyboardButton(dayId, callback_data='{"cmd":"schedule", "params": ["' + context.args[0] + '", "editDays", "' + str(dayId) + '"]}')])
+        greenbot.util.updateOrReply(update, 'Lets change the active days...', reply_markup=InlineKeyboardMarkup(keyboard))
 
     # Show menu for setting time/interval if called with editTime
 
