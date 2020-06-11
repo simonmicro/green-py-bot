@@ -93,12 +93,12 @@ def schedule(update, context):
                     user.write()
                 except ValueError:
                     user.setCommandContext('schedule ' + context.args[0] + ' setInterval')
-                    greenbot.util.updateOrReply(update, 'Thats not a number. Try again.')
+                    context.bot.send_message(chat_id=update.effective_chat.id, text='Thats not a number. Try again.')
                     return
             else:
                 # No -> update the command context so the user can send his input into this command
                 user.setCommandContext('schedule ' + context.args[0] + ' setInterval')
-                greenbot.util.updateOrReply(update, 'Okay, send me now the new interval in minutes!')
+                context.bot.send_message(chat_id=update.effective_chat.id, text='Okay, send me now the new interval in minutes!')
                 return
 
     if len(context.args) < 2 or context.args[1] == 'useInterval' or context.args[1] == 'useDayTime' or context.args[1] == 'setInterval':
