@@ -29,11 +29,12 @@ def stop(update, context):
 def store(update, context):
     logging.debug('Command: store')
 
-    scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'store', 'Welcome to the store my friend! Sel repo', 'sel script')
+    scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'store', 'Welcome to the store 🖖! Before I can show you any of my beautiful scripts, please tell me in which repository you want to take a look...',
+        'Good choice - now in which script are you interested?')
     if not scriptIdentifier:
         return
 
-    greenbot.util.updateOrReply(update, '...')
+    greenbot.util.updateOrReply(update, 'I like kittens!')
 
 def info(update, context):
     logging.debug('Command: info')
