@@ -41,7 +41,7 @@ class Schedule:
 
         # Create new job...
         if self.__forUser is not None and self.__forSkriptIdentifier is not None:
-            self.__job = schedule.every().minute.do(lambda : self.run())
+            self.__job = schedule.every().minute.do(Schedule.run, self)
             logging.debug('Activated schedule for user id ' + str(self.__forUser.getUID()) + ', script ' + self.__forSkriptIdentifier)
 
     def activate(self, user, skriptIdentifier):
