@@ -154,5 +154,7 @@ def onButton(update, context):
 
 def onMessage(update, context):
     if greenbot.user.get(update.message.chat.id).getCommandContext() is not None:
+        # Always reset the context before executing the virtual command with the context
+        greenbot.user.get(update.message.chat.id).setCommandContext(None)
         greenbot.util.executeVirtualCommand(update, context, query.data + ' ' + update.message.text)
     # Otherwise we will just ignore the msg of the user...

@@ -93,9 +93,11 @@ class Schedule:
 
     def enableInterval(self):
         self.__useInterval = True
+        self.__apply()
 
     def enableDayTime(self):
         self.__useInterval = False
+        self.__apply()
 
     def usesInterval(self):
         return self.__useInterval
@@ -133,8 +135,6 @@ class Schedule:
         # Store data for next run
         self.__forSkriptIdentifier = skriptIdentifier
         self.__forUser = user
-
-        # Apply new info
         self.__apply()
 
     def deactivate(self):
