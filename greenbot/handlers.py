@@ -19,7 +19,7 @@ def stop(update, context):
     stop()
 
 def onError(update, context):
-    greenbot.util.updateOrReply(update, random.choice(['🤯', '🤬', '🥺']) + ' I am broken...')
+    greenbot.util.updateOrReply(update, random.choice(['🤯', '🤬', '😬', '🥴']) + ' I am broken...')
     raise context.error
 
 def next_run(update, context):
@@ -135,7 +135,7 @@ def schedule(update, context):
 def deactivate(update, context):
     logging.debug('Command: deactivate')
 
-    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'deactivate', 'Yes, yes - I see. Which script should I ' + random.choice(['fire 😎', 'disable', 'remove']) + '?')
+    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'deactivate', 'Yes, yes - I see. Which script should I ' + random.choice(['fire 😎', 'disable 😬', 'remove 😬']) + '?')
     if not scriptIdentifier:
         return
 
