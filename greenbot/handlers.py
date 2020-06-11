@@ -133,15 +133,21 @@ def schedule(update, context):
 
     # Apply the requested time change
     if context.args[1] == 'addTime':
-        if len(context.args) > 2:
-            scriptSchedule.addTime(context.args[2])
-            user.write()
+        if len(context.args) == 3:
+            try:
+                scriptSchedule.addTime(context.args[2])
+                user.write()
+            except ValueError:
+                user.setCommandContext('schedule ' + context.args[0] + ' addTime')
+                context.bot.send_message(chat_id=update.effective_chat.id, text='Thats not a valid time. Try again.')
+                return
         else:
             # No time given... Ask for one...
-            context.bot.send_message(chat_id=update.effective_chat.id, text='I am bread.')
+            user.setCommandContext('schedule ' + context.args[0] + ' addTime')
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Okay, send me the new time formatted like 11:42!')
             return
     if context.args[1] == 'delTime':
-        if len(context.args) > 2:
+        if len(context.args) == 3:
             scriptSchedule.removeTime(context.args[2])
             user.write()
         else:

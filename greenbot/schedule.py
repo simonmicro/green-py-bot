@@ -85,7 +85,11 @@ class Schedule:
 
     def addTime(self, time):
         self.__times.add(time)
-        self.__apply()
+        try:
+            self.__apply()
+        except schedule.ScheduleValueError:
+            self.__times.remove(time)
+            raise ValueError
 
     def removeTime(self, time):
         self.__times.remove(time)
