@@ -13,7 +13,7 @@ def start(update, context):
     logging.debug('Command: start')
     keyboard = [
         [KeyboardButton('/info')],
-        [KeyboardButton('/activate'), KeyboardButton('/deactivate')],
+        [KeyboardButton('/activate'), KeyboardButton('/store'), KeyboardButton('/deactivate')],
         [KeyboardButton('/schedule')]
     ]
     context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! I am a bot ' + random.choice(['😏', '🤪']) + ', programmed to execute scripts by your schedule. ' +
@@ -26,24 +26,14 @@ def stop(update, context):
     from greenbot.bot import stop
     stop()
 
-def list_repos(update, context):
-    logging.debug('Command: list_repos')
-    context.bot.send_message(chat_id=update.effective_chat.id, text='Available repos: ' + ' '.join(greenbot.repos.getRepos()))
+def store(update, context):
+    logging.debug('Command: store')
 
-def list_scripts(update, context):
-    logging.debug('Command: list_scripts')
-    if len(context.args) != 1:
-        context.bot.send_message(chat_id=update.effective_chat.id, text='Missing params: [repo]')
-    context.bot.send_message(chat_id=update.effective_chat.id, text='Available scripts in ' + context.args[0] + ': ' + ' '.join(greenbot.repos.getScripts(context.args[0])))
-
-def script_info(update, context):
-    logging.debug('Command: script_info')
-
-    scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'script_info')
+    scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'store', 'Welcome to the store my friend! Sel repo', 'sel script')
     if not scriptIdentifier:
         return
 
-    context.bot.send_message(chat_id=update.effective_chat.id, text=greenbot.repos.getModule(scriptIdentifier).info())
+    greenbot.util.updateOrReply(update, '...')
 
 def info(update, context):
     logging.debug('Command: info')
