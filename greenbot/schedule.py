@@ -127,7 +127,7 @@ class Schedule:
                     for time in self.__times:
                         job = job.at(time).do(Schedule.run, self)
                     self.__jobs.append(job)
-            logging.debug('Activated schedule for user id ' + str(self.__forUser.getUID()) + ', script ' + self.__forSkriptIdentifier)
+            logging.info('Scheduled ' + self.__forSkriptIdentifier + ' ' + self.toString() + ' for user id ' + str(self.__forUser.getUID()))
 
     def activate(self, user, skriptIdentifier):
         # Store data for next run
@@ -143,7 +143,7 @@ class Schedule:
             for job in self.__jobs:
                 schedule.cancel_job(job)
             self.__jobs = []
-            logging.debug('Deactivated schedule for user id ' + str(self.__forUser.getUID()) + ', script ' + self.__forSkriptIdentifier)
+            logging.info('Unscheduled ' + self.__forSkriptIdentifier + ' for user id ' + str(self.__forUser.getUID()))
 
     def getLastRunEmoji(self):
         if self.__lastRunResult == 0:
