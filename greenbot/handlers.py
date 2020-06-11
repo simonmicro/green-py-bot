@@ -74,8 +74,8 @@ def schedule(update, context):
     # Show the current schedule if no params are given
     if len(context.args) < 2:
         keyboard = []
-        keyboard.append([InlineKeyboardButton('Edit days', callback_data='{"cmd":"schedule", "params": ["' + context.args[0] + '", "editDays"]}')])
-        keyboard.append([InlineKeyboardButton('Edit time', callback_data='{"cmd":"schedule", "params": ["' + context.args[0] + '", "editTime"]}')])
+        keyboard.append([InlineKeyboardButton('Edit days', callback_data='schedule ' + context.args[0] + ' editDays')])
+        keyboard.append([InlineKeyboardButton('Edit time', callback_data='schedule ' + context.args[0] + ' editTime')])
         greenbot.util.updateOrReply(update, '🕒 The current schedule is ' + str(greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier)), reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
@@ -83,7 +83,7 @@ def schedule(update, context):
     if context.args[1] == 'editDays':
         keyboard = []
         for dayId in range(0, 6):
-            keyboard.append([InlineKeyboardButton(dayId, callback_data='{"cmd":"schedule", "params": ["' + context.args[0] + '", "editDays", "' + str(dayId) + '"]}')])
+            keyboard.append([InlineKeyboardButton(dayId, callback_data='schedule ' + context.args[0] + ' editDays ' + greenbot.schedule.Schedule.dayToString(dayId))])
         greenbot.util.updateOrReply(update, 'Lets change the active days...', reply_markup=InlineKeyboardMarkup(keyboard))
 
     # Show menu for setting time/interval if called with editTime
@@ -109,30 +109,22 @@ def deactivate(update, context):
     greenbot.util.updateOrReply(update, random.choice(['💀', '💣', '😵']) + ' Bye ' + context.args[0] + '. You have been deactivated.')
 
 def keyboard_button(update, context):
-    import json
     query = update.callback_query
     logging.debug('Callback: Keyboard button pressed ' + str(query.data))
     query.answer()
+
     # Now try to decode the packed data into commands and args
-    try:
-        msgData = json.loads(query.data)
-        # If successful: Test if the cmd param is set - if yes, forward respectively
-        if 'cmd' in msgData.keys():
-            context.args = msgData['params']
-            logging.debug('Found command data with params ' + str(context.args))
-            if msgData['cmd'] == 'activate':
-                activate(update, context)
-            elif msgData['cmd'] == 'schedule':
-                schedule(update, context)
-            elif msgData['cmd'] == 'deactivate':
-                deactivate(update, context)
-            elif msgData['cmd'] == 'script_info':
-                script_info(update, context)
-            else:
-                logging.error('Command "' + msgData['cmd'] + '" not allowed inside callback!')
-        else:
-            logging.error('Keyboard press didn\'t contain any supported operation')
-    except json.decoder.JSONDecodeError as e:
-        # Ignore the data and inform user about error
-        logging.error('Error at JSON data parsing: ' + str(e))
-        pass
+    msgData = query.data.split(' ')
+    cmd = msgData[0]
+    context.args = msgData[1:]
+    logging.debug('Found command ' + cmd + ' with params ' + str(context.args))
+    if cmd == 'activate':
+        activate(update, context)
+    elif cmd == 'schedule':
+        schedule(update, context)
+    elif cmd == 'deactivate':
+        deactivate(update, context)
+    elif cmd == 'script_info':
+        script_info(update, context)
+    else:
+        logging.error('Command "' + cmd + '" not allowed inside callback!')

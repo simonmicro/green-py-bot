@@ -40,7 +40,8 @@ class Schedule:
             return 'every day'
         return ', '.join(self.dayToString(x) for x in self.__days)
 
-    def dayToString(self, dayId):
+    @staticmethod
+    def dayToString(dayId):
         if dayId == 0:
             return 'Monday'
         if dayId == 1:

@@ -16,7 +16,7 @@ def getGlobalSkriptIdentifier(update, context, commandName):
     if len(context.args) < 1 or not greenbot.repos.resolveIdentifier(context.args[0])[0] in greenbot.repos.getRepos():
         keyboard = []
         for repoName in greenbot.repos.getRepos():
-            keyboard.append([InlineKeyboardButton(repoName, callback_data='{"cmd":"' + commandName + '", "params": ["' + greenbot.repos.makeIdentifier(repoName) + '"]}')])
+            keyboard.append([InlineKeyboardButton(repoName, callback_data=commandName + ' ' + greenbot.repos.makeIdentifier(repoName))])
         greenbot.util.updateOrReply(update, 'Okay, now tell me in which repository I should look 🤔', reply_markup=InlineKeyboardMarkup(keyboard))
         return False
     # ...or the script part? (Intended, if we are showing the keyboard)
@@ -24,7 +24,7 @@ def getGlobalSkriptIdentifier(update, context, commandName):
         # Show keyboard with key for every script
         keyboard = []
         for scriptName in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
-            keyboard.append([InlineKeyboardButton(scriptName, callback_data='{"cmd":"' + commandName + '", "params": ["' + greenbot.repos.makeIdentifier(context.args[0], scriptName) + '"]}')])
+            keyboard.append([InlineKeyboardButton(scriptName, callback_data=commandName + ' ' + greenbot.repos.makeIdentifier(context.args[0], scriptName))])
         greenbot.util.updateOrReply(update, 'And which script do you wish to activate ' + random.choice(['🧐', '🤨']) + '?', reply_markup=InlineKeyboardMarkup(keyboard))
         return False
 
@@ -36,7 +36,7 @@ def getUserSkriptIdentifier(update, context, commandName, missingIdentifierOut):
         # Show keyboard with key for every active script
         keyboard = []
         for scriptIdentifier in greenbot.user.get(update.effective_chat.id).getScripts():
-            keyboard.append([InlineKeyboardButton(scriptIdentifier, callback_data='{"cmd":"' + commandName + '", "params": ["' + scriptIdentifier + '"]}')])
+            keyboard.append([InlineKeyboardButton(scriptIdentifier, callback_data=commandName + ' ' + scriptIdentifier)])
         greenbot.util.updateOrReply(update, missingIdentifierOut, reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
