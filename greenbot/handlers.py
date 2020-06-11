@@ -29,8 +29,8 @@ def stop(update, context):
 def store(update, context):
     logging.debug('Command: store')
 
-    scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'store', 'Welcome to the store 🖖! Before I can show you any of my beautiful scripts, please tell me in which repository you want to take a look...',
-        'Good choice - now in which script are you interested?')
+    scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'store', 'Welcome to the store, stranger 🖖! Before I can show you any of my beautiful scripts, please tell me in which repository you want to take a look with me...',
+        random.choice(['Good', '🤩 Perfect', 'Excellent']) + ' choice! Here you can see all the scripts inside that one particular repository. In which one are you more interested in ' + random.choice(['😊', '😇', '😁']) + '?')
     if not scriptIdentifier:
         return
 
