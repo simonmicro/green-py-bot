@@ -31,6 +31,11 @@ def getGlobalSkriptIdentifier(update, context, commandName):
     return context.args[0]
 
 def getUserSkriptIdentifier(update, context, commandName, missingIdentifierOut):
+    # Make sure the user has at least one script to select
+    if len(greenbot.user.get(update.effective_chat.id).getScripts()) < 1:
+        greenbot.util.updateOrReply(update, 'You have no scripts active 🥶')
+        return
+
     # Show keyboard for active scripts
     if len(context.args) < 1 or not greenbot.repos.validateIdentifier(context.args[0]):
         # Show keyboard with key for every active script
