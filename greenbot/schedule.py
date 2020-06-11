@@ -37,7 +37,10 @@ class Schedule:
 
     def toString(self):
         if self.__useInterval:
-            return 'every ' + str(self.__interval) + ' minutes'
+            returnme =  'every ' + str(self.__interval) + ' minute'
+            if self.__interval > 1:
+                returnme = returnme + 's'
+            return returnme
         return self.daysToString() + ' ' + self.timeToString()
 
     def daysToString(self):
