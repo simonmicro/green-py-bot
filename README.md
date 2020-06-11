@@ -5,4 +5,4 @@
 https://hub.docker.com/r/realsimonmicro/green-py-bot
 
 # Visit the bot over on Telegram #
-t.me/green_py_bot
+https://t.me/green_py_bot
