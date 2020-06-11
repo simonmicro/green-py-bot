@@ -100,6 +100,6 @@ def getAll():
         for filename in files:
             if filename.endswith('.json'):
                 # Okay, found a user id -> load it into the cache
-                get(filename[:-5])
+                get(int(filename[:-5]))
         break
     return userCache
