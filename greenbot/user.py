@@ -14,6 +14,7 @@ class User:
     __uid = None
     __scripts = set() # Stores active script identifiers
     __schedules = {} # Stores schedule information for active script identifiers
+    __commandContext = None # Used to prepend commands for free text inputs
 
     def __init__(self, uid):
         self.__uid = int(uid)
@@ -23,6 +24,7 @@ class User:
         if os.path.isfile(self.__getConfigFileName()):
             with open(self.__getConfigFileName()) as file:
                 config = json.loads(file.read())
+                self.setCommandContext(config['context'])
                 for identifier, settings in config['scripts'].items():
                     self.activateScript(identifier)
                     self.setScriptSchedule(identifier, greenbot.schedule.Schedule(settings['schedule']))
@@ -36,6 +38,7 @@ class User:
         for identifier in self.__scripts:
             scritpsData[identifier] = {'schedule': self.getScriptSchedule(identifier).save()}
         writeme = json.dumps({
+                'context' : self.__commandContext,
                 'scripts' : scritpsData
             }, sort_keys=True, indent=4)
         f = open(self.__getConfigFileName(), 'w')
@@ -85,6 +88,12 @@ class User:
 
     def getUID(self):
         return self.__uid
+
+    def setCommandContext(self, cmd):
+        self.__commandContext = cmd
+
+    def getCommandContext(self):
+        return self.__commandContext
 
 def get(uid):
     global userCache

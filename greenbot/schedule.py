@@ -128,8 +128,6 @@ class Schedule:
                         job = job.at(time).do(Schedule.run, self)
                     self.__jobs.append(job)
             logging.info('Scheduled ' + self.__forSkriptIdentifier + ' ' + self.toString() + ' for user id ' + str(self.__forUser.getUID()))
-#            import traceback
-#            traceback.print_stack()
 
     def activate(self, user, skriptIdentifier):
         # Store data for next run
