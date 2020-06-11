@@ -79,11 +79,20 @@ def schedule(update, context):
         greenbot.util.updateOrReply(update, '🕒 The current schedule is ' + str(greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier)), reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
+    # Toggle the day as requested
+    if context.args[1] == 'toggleDay':
+        greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier).toggleDay(int(context.args[2]))
+
     # Show menu for setting day(s) if called with editDays
-    if context.args[1] == 'editDays':
+    if context.args[1] == 'editDays' or context.args[1] == 'toggleDay':
         keyboard = []
-        for dayId in range(0, 6):
-            keyboard.append([InlineKeyboardButton(dayId, callback_data='schedule ' + context.args[0] + ' editDays ' + greenbot.schedule.Schedule.dayToString(dayId))])
+        for dayId in range(0, 7):
+            sign = ''
+            if dayId in greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier).getDays():
+                sign = '✅'
+            else:
+                sign = '❌'
+            keyboard.append([InlineKeyboardButton(sign + ' ' + greenbot.schedule.Schedule.dayToString(dayId) + ' ' + sign, callback_data='schedule ' + context.args[0] + ' toggleDay ' + str(dayId))])
         greenbot.util.updateOrReply(update, 'Lets change the active days...', reply_markup=InlineKeyboardMarkup(keyboard))
 
     # Show menu for setting time/interval if called with editTime

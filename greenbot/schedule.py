@@ -62,6 +62,15 @@ class Schedule:
         self.__interval = interval
         self.__apply()
 
+    def getDays(self):
+        return self.__days
+
+    def toggleDay(self, dayId):
+        if dayId in self.__days:
+            self.__days.remove(dayId)
+        else:
+            self.__days.append(dayId)
+
     def getInterval(self):
         return self.__interval
 
