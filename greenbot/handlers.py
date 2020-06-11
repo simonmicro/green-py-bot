@@ -7,10 +7,18 @@ import greenbot.user
 import greenbot.schedule
 import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import ReplyKeyboardMarkup, KeyboardButton
 
 def start(update, context):
     logging.debug('Command: start')
-    context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! I am a bot ' + random.choice(['😏', '🤪']) + ', programmed to execute scripts by your schedule. To begin you should activate a new script with /activate. You can use /info to view all currently active scripts and their last execution result. If you don\'t find what you are looking for, maybe consider to program it yourself 💻! Its easy - It is just Python 🐍!')
+    keyboard = [
+        [KeyboardButton('/info')],
+        [KeyboardButton('/activate'), KeyboardButton('/deactivate')],
+        [KeyboardButton('/schedule')]
+    ]
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! I am a bot ' + random.choice(['😏', '🤪']) + ', programmed to execute scripts by your schedule.' +
+        'To begin you should activate a new script with /activate. You can use /info to view all currently active scripts and their last execution result. If you don\'t' + 
+        'find what you are looking for, maybe consider to program it yourself 💻! Its easy - It is just Python 🐍!', reply_markup=ReplyKeyboardMarkup(keyboard))
 
 def stop(update, context):
     logging.debug('Command: stop')
@@ -21,11 +29,6 @@ def stop(update, context):
 def onError(update, context):
     greenbot.util.updateOrReply(update, random.choice(['🤯', '🤬', '😬', '🥴']) + ' I am broken...')
     raise context.error
-
-def next_run(update, context):
-    logging.debug('Command: next_run')
-    import schedule
-    context.bot.send_message(chat_id=update.effective_chat.id, text='🕒 Next run scheduled at ' + str(schedule.next_run()))
 
 def list_repos(update, context):
     logging.debug('Command: list_repos')

@@ -25,7 +25,7 @@ def getGlobalSkriptIdentifier(update, context, commandName):
         keyboard = []
         for scriptName in greenbot.repos.getScripts(greenbot.repos.resolveIdentifier(context.args[0])[0]):
             keyboard.append([InlineKeyboardButton(scriptName, callback_data=commandName + ' ' + greenbot.repos.makeIdentifier(context.args[0], scriptName))])
-        greenbot.util.updateOrReply(update, 'And which script do you wish to activate ' + random.choice(['🧐', '🤨']) + '?', reply_markup=InlineKeyboardMarkup(keyboard))
+        greenbot.util.updateOrReply(update, 'And which script do you mean ' + random.choice(['🧐', '🤨']) + '?', reply_markup=InlineKeyboardMarkup(keyboard))
         return False
 
     return context.args[0]
