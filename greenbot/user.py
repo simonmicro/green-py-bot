@@ -45,8 +45,13 @@ class User:
 
     def activateScript(self, scriptIdentifier):
         self.__scripts.add(scriptIdentifier)
-        self.setScriptSchedule(scriptIdentifier, self.getScriptSchedule(scriptIdentifier))
-        self.getScriptSchedule(scriptIdentifier).activate(self, scriptIdentifier)
+        # Preserve previous schedule (if available)
+        if self.getScriptSchedule(scriptIdentifier) is not None:
+            # Just reactivate it
+            self.getScriptSchedule(scriptIdentifier).activate(self, scriptIdentifier)
+        else:
+            # Create a new one...
+            self.setScriptSchedule(scriptIdentifier, greenbot.schedule.Schedule())
         self.write()
         logging.debug('Activated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
@@ -54,7 +59,8 @@ class User:
     def deactivateScript(self, scriptIdentifier):
         self.__scripts.remove(scriptIdentifier)
         # We are not deleting the schedule data here - just in case the user deactivated the script by accident
-        self.getScriptSchedule(scriptIdentifier).deactivate()
+        if self.getScriptSchedule(scriptIdentifier) is not None:
+                self.getScriptSchedule(scriptIdentifier).deactivate()
         self.write()
         logging.debug('Deactivated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
@@ -65,11 +71,12 @@ class User:
     def getScriptSchedule(self, scriptIdentifier):
         if scriptIdentifier in self.__schedules:
             return self.__schedules[scriptIdentifier]
-        return greenbot.schedule.Schedule()
+        return None
 
     def setScriptSchedule(self, scriptIdentifier, newSchedule):
         # Deactivate current schedule
-        self.getScriptSchedule(scriptIdentifier).deactivate()
+        if self.getScriptSchedule(scriptIdentifier) is not None:
+            self.getScriptSchedule(scriptIdentifier).deactivate()
         # And install new schedule
         self.__schedules[scriptIdentifier] = newSchedule
         self.write()
