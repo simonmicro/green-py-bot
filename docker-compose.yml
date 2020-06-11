@@ -1,0 +1,7 @@
+version: '3.4'
+services:
+    greenbot:
+        image: realsimonmicro/green-py-bot
+        restart: always
+        volumes:
+            - ./data:/greenbot/data
