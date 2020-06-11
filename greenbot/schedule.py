@@ -67,7 +67,7 @@ class Schedule:
         return 'Unknown'
 
     def setInterval(self, interval):
-        self.__interval = interval
+        self.__interval = abs(interval)
         self.__apply()
 
     def getDays(self):

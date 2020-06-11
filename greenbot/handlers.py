@@ -88,8 +88,13 @@ def schedule(update, context):
         elif context.args[1] == 'setInterval':
             # Did the user already appended his new interval?
             if len(context.args) == 3:
-                scriptSchedule.setInterval(int(context.args[2]))
-                user.write()
+                try:
+                    scriptSchedule.setInterval(int(context.args[2]))
+                    user.write()
+                except ValueError:
+                    user.setCommandContext('schedule ' + context.args[0] + ' setInterval')
+                    greenbot.util.updateOrReply(update, 'Thats not a number. Try again.')
+                    return
             else:
                 # No -> update the command context so the user can send his input into this command
                 user.setCommandContext('schedule ' + context.args[0] + ' setInterval')
