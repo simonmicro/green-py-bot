@@ -71,11 +71,18 @@ def schedule(update, context):
     if not scriptIdentifier:
         return
 
+    # Show the current schedule if no params are given
+    greenbot.util.updateOrReply(update, '🕒 The current schedule is ' + str(greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier)))
+
+    # Show menu for setting day(s) if called with editDays
+
+    # Show menu for setting time/interval if called with editTime
+
     # Reschedule it for now to run it every minute
-    newSchedule = greenbot.schedule.Schedule()
-    newSchedule.setInterval(1)
-    greenbot.user.get(update.effective_chat.id).setScriptSchedule(scriptIdentifier, newSchedule)
-    greenbot.util.updateOrReply(update, 'RESCHEDULED: TO RUN EVERY MINUTE ' + scriptIdentifier)
+    #newSchedule = greenbot.schedule.Schedule()
+    #newSchedule.setInterval(1)
+    #greenbot.user.get(update.effective_chat.id).setScriptSchedule(scriptIdentifier, newSchedule)
+    #greenbot.util.updateOrReply(update, 'RESCHEDULED: TO RUN EVERY MINUTE ' + scriptIdentifier)
 
 def deactivate(update, context):
     logging.debug('Command: deactivate')

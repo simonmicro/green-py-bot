@@ -29,6 +29,9 @@ class Schedule:
             'times': self.__times,
         }
 
+    def __str__(self):
+        return 'days: ' + str(self.__days) + ' times: ' + str(self.__times) + ' or interval: ' + str(self.__interval)
+
     def setInterval(self, interval):
         self.__interval = interval
         self.__apply()
