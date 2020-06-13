@@ -10,7 +10,6 @@ class Schedule:
     __jobs = []
     __forSkriptIdentifier = None
     __forUser = None
-    __lastRunResult = 1 # 0 = Success, 1 = Warning, 2 = Failed
 
     # Simple class to wrap the different parameters
     def __init__(self, obj = None):
@@ -155,28 +154,6 @@ class Schedule:
             self.__jobs = []
             logging.info('Unscheduled ' + self.__forSkriptIdentifier + ' for user id ' + str(self.__forUser.getUID()))
 
-    def getLastRunEmoji(self):
-        if self.__lastRunResult == 0:
-            return '✅'
-        elif self.__lastRunResult == 1:
-            return '⚠️'
-        elif self.__lastRunResult == 2:
-            return '❌'
-        else:
-            return '🔥'
-
     def run(self):
         logging.debug('Running schedule for user id ' + str(self.__forUser.getUID()) + ', script ' + self.__forSkriptIdentifier)
-        try:
-            # Load the module
-            module = greenbot.repos.getModule(self.__forSkriptIdentifier)
-
-            # And call the scheduled function (if available)
-            if hasattr(module, 'scheduledRun'):
-                module.scheduledRun(self.__forUser)
-                self.__lastRunResult = 0
-            else:
-                logging.error('Ooops, the script ' + self.__forSkriptIdentifier + ' has no scheduledRun(user) method!')
-        except:
-            self.__lastRunResult = 2
-            pass
+        self.__forUser.runScheduled(self.__forSkriptIdentifier)

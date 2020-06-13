@@ -14,6 +14,7 @@ class User:
     __uid = None
     __scripts = set() # Stores active script identifiers
     __schedules = {} # Stores schedule information for active script identifiers
+    __lastRunResults = {} # Stores the last execution state for a script identifier 0 = Failed, 1 = Success, * = Warning
     __commandContext = None # Used to prepend commands for free text inputs
 
     def __init__(self, uid):
@@ -95,6 +96,48 @@ class User:
 
     def getCommandContext(self):
         return self.__commandContext
+
+    def runManually(self, scriptIdentifier, update, context):
+        logging.debug('Executing ' + scriptIdentifier + ' for user ' + str(self.__uid) + ' MANUALLY')
+        try:
+            # Load the module
+            module = greenbot.repos.getModule(scriptIdentifier)
+
+            # And call the scheduled function (if available)
+            if hasattr(module, 'manualRun'):
+                module.scheduledRun(self, update, context)
+                self.__lastRunResults[scriptIdentifier] = 0
+            else:
+                logging.error('Ooops, the script ' + scriptIdentifier + ' has no manualRun(user, update, context) method!')
+        except:
+            self.__lastRunResults[scriptIdentifier] = 2
+            pass
+
+    def runScheduled(self, scriptIdentifier):
+        logging.debug('Executing ' + scriptIdentifier + ' for user ' + str(self.__uid) + ' SCHEDULED')
+        try:
+            # Load the module
+            module = greenbot.repos.getModule(scriptIdentifier)
+
+            # And call the scheduled function (if available)
+            if hasattr(module, 'scheduledRun'):
+                module.scheduledRun(self)
+                self.__lastRunResults[scriptIdentifier] = 0
+            else:
+                logging.error('Ooops, the script ' + scriptIdentifier + ' has no scheduledRun(user) method!')
+        except:
+            self.__lastRunResults[scriptIdentifier] = 2
+            pass
+
+    def getLastRunEmoji(self, scriptIdentifier):
+        if scriptIdentifier not in self.__lastRunResults:
+            return '⚠️'
+        if self.__lastRunResults[scriptIdentifier] == 0:
+            return '❌'
+        elif self.__lastRunResults[scriptIdentifier] == 1:
+            return '✅'
+        else:
+            return '🔥'
 
 def get(uid):
     global userCache
