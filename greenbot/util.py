@@ -4,6 +4,11 @@ import greenbot.repos
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 logger = logging.getLogger('greenbot.util')
 
+## Edits the last sent message or sends a new one (based on event type)
+# @param update
+# @param *args
+# @param **kwargs
+# @return sent message
 def updateOrReply(update, *args, **kwargs):
     # Detect if we are inside a callback (in that case we will update the msg) or just inside a handler
     if update.callback_query is not None:
@@ -13,6 +18,12 @@ def updateOrReply(update, *args, **kwargs):
         # Okay, no callback -> reply with new msg
         return update.effective_message.reply_text(*args, **kwargs)
 
+## Asks the user to input the details, needed to build a script identifier as first param for the given command
+# @param update
+# @param context
+# @param commandName We will execute 'commandName scriptIdentifier'
+# @param missingRepoOut
+# @param missingScriptOut
 def getGlobalSkriptIdentifier(update, context, commandName, missingRepoOut = 'Okay, now tell me in which repository I should look 🤔', missingScriptOut = 'And which script do you mean ' + random.choice(['🧐', '🤨']) + '?'):
     # Are we missing the identifier or is it invalid?
     if len(context.args) < 1 or not greenbot.repos.resolveIdentifier(context.args[0])[0] in greenbot.repos.getRepos():
@@ -33,6 +44,11 @@ def getGlobalSkriptIdentifier(update, context, commandName, missingRepoOut = 'Ok
 
     return context.args[0]
 
+## Ask the user which of his identifiers he want
+# @param update
+# @param context
+# @param commandName
+# @param missingIdentifierOut
 def getUserSkriptIdentifier(update, context, commandName, missingIdentifierOut):
     # Make sure the user has at least one script to select
     if len(greenbot.user.get(update.effective_chat.id).getScripts()) < 1:
@@ -50,6 +66,10 @@ def getUserSkriptIdentifier(update, context, commandName, missingIdentifierOut):
 
     return context.args[0]
 
+## Executes virtual commands from e.g. the context or a button press
+# @param update
+# @param context
+# @param cmdStr Normal command from e.g. the chat (just without the leading '/')
 def executeVirtualCommand(update, context, cmdStr):
     import greenbot.handlers
 
