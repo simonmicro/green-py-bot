@@ -13,8 +13,8 @@ def getScriptInfo():
 
 # Gets called on /run - implementation is OPTIONAL.
 def manualRun(user, update, context):
-    greenbot.bot.updater.bot.send_message(chat_id=user.getUID(), text='Hi. I know you executed me manually 🙃!')
+    greenbot.bot.updater.bot.send_message(chat_id=user.getUID(), text='💡 Hi from the example script! You will receive this message whenever this script gets executed manually. If you enabled scheduling, make sure to /deactivate me.')
 
 # Gets called on a schedule - implementation is OPTIONAL.
 def scheduledRun(user):
-    greenbot.bot.updater.bot.send_message(chat_id=user.getUID(), text='💡 Hi from the example script! You will receive this message whenever this script gets executed. Make sure to /deactivate it when you are done.')
+    greenbot.bot.updater.bot.send_message(chat_id=user.getUID(), text='💡 Hi from the example script! You will receive this message whenever this script gets executed by schedule. Make sure to /deactivate it when you are done.')
