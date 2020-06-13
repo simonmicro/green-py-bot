@@ -52,8 +52,9 @@ def store(update, context):
 def info(update, context):
     logging.debug('Command: info')
     user = greenbot.user.get(update.message.chat.id)
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Hi, I am The Green Bot #' + greenbot.config.version + ' at your service!')
     if len(user.getScripts()) > 0:
-        scriptsStr = 'Currently active scripts are:\n\n'
+        scriptsStr = 'Your currently active scripts are:\n\n'
         for identifier in greenbot.user.get(update.message.chat.id).getScripts():
             scriptsStr = scriptsStr + user.getLastRunEmoji(identifier) + ' ' + identifier + ' \(' + str(user.getScriptSchedule(identifier)) + '\)\n'
         context.bot.send_message(chat_id=update.effective_chat.id, text=scriptsStr, parse_mode=telegram.ParseMode.MARKDOWN_V2)

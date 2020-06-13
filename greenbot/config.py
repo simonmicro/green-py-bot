@@ -1,11 +1,13 @@
-import logging
 import os
+import logging
+import git
 import json
 import greenbot.repos
 
 token = ''
 repos = {}
 configPath = 'data/config.json'
+version = ''
 
 # Make sure the data path exists
 os.makedirs(os.path.split(configPath)[0], exist_ok=True)
@@ -14,6 +16,7 @@ def load():
     global configPath
     global token
     global repos
+    global version
     logging.debug('Loading config from ' + configPath)
     # Test if file is there...
     if not os.path.isfile(configPath):
@@ -32,5 +35,12 @@ def load():
         config = json.loads(file.read())
         token = config['token']
         repos = config['repos']
+
+    # Now determine the version hash
+    try:
+        version = git.Git('.').rev_parse('HEAD')[:7]
+    except git.exc.GitCommandError:
+        # Ooops, not running from Git... Args.
+        version = '???????'
 
     logging.debug('Config loaded')
