@@ -100,6 +100,12 @@ def schedule(update, context):
         elif context.args[1] == 'useDayTime':
             scriptSchedule.enableDayTime()
             user.write()
+        elif context.args[1] == 'enable':
+            scriptSchedule.enable()
+            user.write()
+        elif context.args[1] == 'disable':
+            scriptSchedule.disable()
+            user.write()
         elif context.args[1] == 'setInterval':
             # Did the user already appended his new interval?
             if len(context.args) == 3:
@@ -116,16 +122,22 @@ def schedule(update, context):
                 context.bot.send_message(chat_id=update.effective_chat.id, text='Okay, send me now the new interval in minutes!')
                 return
 
-    if len(context.args) < 2 or context.args[1] == 'useInterval' or context.args[1] == 'useDayTime' or context.args[1] == 'setInterval':
+    if len(context.args) < 2 or context.args[1] == 'useInterval' or context.args[1] == 'useDayTime' or context.args[1] == 'setInterval' or context.args[1] == 'enable' or context.args[1] == 'disable':
         keyboard = []
-        if scriptSchedule.usesInterval():
-            keyboard.append([InlineKeyboardButton('Change interval', callback_data='schedule ' + context.args[0] + ' setInterval')])
-            keyboard.append([InlineKeyboardButton('Switch to day/time', callback_data='schedule ' + context.args[0] + ' useDayTime')])
+        if scriptSchedule.isEnabled():
+            if scriptSchedule.usesInterval():
+                keyboard.append([InlineKeyboardButton('Change interval', callback_data='schedule ' + context.args[0] + ' setInterval')])
+                keyboard.append([InlineKeyboardButton('Switch to day/time', callback_data='schedule ' + context.args[0] + ' useDayTime'),
+                    InlineKeyboardButton('Disable schedule', callback_data='schedule ' + context.args[0] + ' disable')])
+            else:
+                keyboard.append([InlineKeyboardButton('Edit days', callback_data='schedule ' + context.args[0] + ' editDays'),
+                    InlineKeyboardButton('Edit times', callback_data='schedule ' + context.args[0] + ' editTime')])
+                keyboard.append([InlineKeyboardButton('Switch to interval', callback_data='schedule ' + context.args[0] + ' useInterval'),
+                    InlineKeyboardButton('Disable schedule', callback_data='schedule ' + context.args[0] + ' disable')])
+            greenbot.util.updateOrReply(update, '🕒 The current schedule is ' + str(scriptSchedule), reply_markup=InlineKeyboardMarkup(keyboard))
         else:
-            keyboard.append([InlineKeyboardButton('Edit days', callback_data='schedule ' + context.args[0] + ' editDays'),
-                InlineKeyboardButton('Edit times', callback_data='schedule ' + context.args[0] + ' editTime')])
-            keyboard.append([InlineKeyboardButton('Switch to interval', callback_data='schedule ' + context.args[0] + ' useInterval')])
-        greenbot.util.updateOrReply(update, '🕒 The current schedule is ' + str(scriptSchedule), reply_markup=InlineKeyboardMarkup(keyboard))
+            keyboard.append([InlineKeyboardButton('Enable schedule', callback_data='schedule ' + context.args[0] + ' enable')])
+            greenbot.util.updateOrReply(update, '🕒 This schedule is currently inactive. You can always execute the script by using 👉 /run ' + scriptIdentifier + ' 👈.', reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
     # Toggle the day as requested

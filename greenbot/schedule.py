@@ -10,6 +10,7 @@ class Schedule:
     __jobs = []
     __forSkriptIdentifier = None
     __forUser = None
+    __enabled = True
 
     # Simple class to wrap the different parameters
     def __init__(self, obj = None):
@@ -18,6 +19,9 @@ class Schedule:
         return
 
     def load(self, obj):
+        # This key was added later on...
+        if 'enabled' in obj:
+            self.__enabled = obj['enabled']
         self.__days = set(obj['days'])
         self.__interval = obj['interval']
         self.__useInterval = obj['useInterval']
@@ -25,6 +29,7 @@ class Schedule:
 
     def save(self):
         return {
+            'enabled': self.__enabled,
             'days': list(self.__days),
             'interval': self.__interval,
             'useInterval': self.__useInterval,
@@ -100,6 +105,17 @@ class Schedule:
     def getInterval(self):
         return self.__interval
 
+    def isEnabled(self):
+        return self.__enabled
+
+    def enable(self):
+        self.__enabled = True
+        self.__apply()
+
+    def disable(self):
+        self.__enabled = False
+        self.__apply()
+
     def enableInterval(self):
         self.__useInterval = True
         self.__apply()
@@ -115,7 +131,7 @@ class Schedule:
         self.deactivate()
 
         # Create new job...
-        if self.__forUser is not None and self.__forSkriptIdentifier is not None:
+        if self.__enabled and self.__forUser is not None and self.__forSkriptIdentifier is not None:
             if self.__useInterval:
                 self.__jobs.append(schedule.every(self.__interval).minutes.do(Schedule.run, self))
             else:
