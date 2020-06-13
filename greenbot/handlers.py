@@ -29,6 +29,9 @@ def start(update, context):
 # @param context
 def stop(update, context):
     logger.debug('Command: stop')
+    if not greenbot.util.isGroupAdminOrDirectChat(update):
+        return
+
     context.bot.send_message(chat_id=update.effective_chat.id, text='🆘 Initiating bot shutdown...')
     from greenbot.bot import stop
     stop()
@@ -94,6 +97,8 @@ def run(update, context):
 # @param context
 def activate(update, context):
     logger.debug('Command: activate')
+    if not greenbot.util.isGroupAdminOrDirectChat(update):
+        return
 
     scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'activate')
     if not scriptIdentifier:
@@ -108,6 +113,8 @@ def activate(update, context):
 # @param context
 def schedule(update, context):
     logger.debug('Command: schedule')
+    if not greenbot.util.isGroupAdminOrDirectChat(update):
+        return
 
     scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'schedule', 'Which from your scripts did you mean ' + random.choice(['🤔', '🤨']) + '?')
     if not scriptIdentifier:
@@ -228,6 +235,8 @@ def schedule(update, context):
 # @param context
 def deactivate(update, context):
     logger.debug('Command: deactivate')
+    if not greenbot.util.isGroupAdminOrDirectChat(update):
+        return
 
     scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'deactivate', 'Yes, yes - I see. Which script should I ' + random.choice(['fire 😎', 'disable 😬', 'remove 😬']) + '?')
     if not scriptIdentifier:
