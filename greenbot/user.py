@@ -106,11 +106,11 @@ class User:
             # And call the scheduled function (if available)
             if hasattr(module, 'manualRun'):
                 module.scheduledRun(self, update, context)
-                self.__lastRunResults[scriptIdentifier] = 0
+                self.__lastRunResults[scriptIdentifier] = 1
             else:
                 logging.error('Ooops, the script ' + scriptIdentifier + ' has no manualRun(user, update, context) method!')
         except:
-            self.__lastRunResults[scriptIdentifier] = 2
+            self.__lastRunResults[scriptIdentifier] = 0
             pass
 
     def runScheduled(self, scriptIdentifier):
@@ -122,11 +122,11 @@ class User:
             # And call the scheduled function (if available)
             if hasattr(module, 'scheduledRun'):
                 module.scheduledRun(self)
-                self.__lastRunResults[scriptIdentifier] = 0
+                self.__lastRunResults[scriptIdentifier] = 1
             else:
                 logging.error('Ooops, the script ' + scriptIdentifier + ' has no scheduledRun(user) method!')
         except:
-            self.__lastRunResults[scriptIdentifier] = 2
+            self.__lastRunResults[scriptIdentifier] = 0
             pass
 
     def getLastRunEmoji(self, scriptIdentifier):
