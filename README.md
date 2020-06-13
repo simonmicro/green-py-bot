@@ -2,6 +2,7 @@
 ![repo-size](https://img.shields.io/github/repo-size/simonmicro/green-py-bot)
 ![open-issues](https://img.shields.io/github/issues/simonmicro/green-py-bot)
 ![last-commit](https://img.shields.io/github/last-commit/simonmicro/green-py-bot/master)
+![license](https://img.shields.io/github/license/simonmicro/green-py-bot)
 
 This is a easy-to-use Telegram bot. Its main task is to execute trusted Python scripts by a schedule. Useful e.g. to fetch RSS feeds or monitor or... Just everything you can do with Python.
 You are missing a script? Just contribute and enjoy the community using it!
