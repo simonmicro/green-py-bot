@@ -1,8 +1,9 @@
 import os
-import logging
 import git
 import json
+import logging
 import greenbot.repos
+logger = logging.getLogger('greenbot.config')
 
 token = ''
 repos = {}
@@ -17,10 +18,10 @@ def load():
     global token
     global repos
     global version
-    logging.debug('Loading config from ' + configPath)
+    logger.debug('Loading config from ' + configPath)
     # Test if file is there...
     if not os.path.isfile(configPath):
-        logging.debug('Config file not found. Creating default...')
+        logger.debug('Config file not found. Creating default...')
         # If not: Create default
         defaultConfig = {
             'token' : '',
@@ -43,4 +44,4 @@ def load():
         # Ooops, not running from Git... Args.
         version = '???????'
 
-    logging.debug('Config loaded')
+    logger.debug('Config loaded')

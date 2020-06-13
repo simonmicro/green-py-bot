@@ -8,9 +8,10 @@ import greenbot.schedule
 import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram import ReplyKeyboardMarkup, KeyboardButton
+logger = logging.getLogger('greenbot.handlers')
 
 def start(update, context):
-    logging.debug('Command: start')
+    logger.debug('Command: start')
     keyboard = [
         [KeyboardButton('/info')],
         [KeyboardButton('/activate'), KeyboardButton('/store'), KeyboardButton('/deactivate')],
@@ -21,13 +22,13 @@ def start(update, context):
         'find what you are looking for, maybe consider to program it yourself and contribute to https://github.com/Simonmicro/green-py-bot!', reply_markup=ReplyKeyboardMarkup(keyboard))
 
 def stop(update, context):
-    logging.debug('Command: stop')
+    logger.debug('Command: stop')
     context.bot.send_message(chat_id=update.effective_chat.id, text='🆘 Initiating bot shutdown...')
     from greenbot.bot import stop
     stop()
 
 def store(update, context):
-    logging.debug('Command: store')
+    logger.debug('Command: store')
 
     scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'store', 'Welcome to the store, stranger ' + random.choice(['🖖', '😜']) + '! Before I can show you any of my beautiful scripts, please tell me in which repository you want to take a look with me' + random.choice(['', ' 🤔']) + '...',
         random.choice(['Good', 'Excellent', '🤩 Perfect']) + ' choice! Here you can see all the scripts inside that one particular repository. In which one are you more interested in ' + random.choice(['😊', '😇', '😁']) + '?')
@@ -50,7 +51,7 @@ def store(update, context):
     greenbot.util.updateOrReply(update, response, reply_markup=InlineKeyboardMarkup(keyboard))
 
 def info(update, context):
-    logging.debug('Command: info')
+    logger.debug('Command: info')
     user = greenbot.user.get(update.message.chat.id)
     context.bot.send_message(chat_id=update.effective_chat.id, text='Hi, I am The Green Bot #' + greenbot.config.version + ' at your service!')
     if len(user.getScripts()) > 0:
@@ -62,7 +63,7 @@ def info(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text='You have currently no scripts activated ' + random.choice(['😢', '😱', '🥺']) + '. Use /store to view for some!')
 
 def run(update, context):
-    logging.debug('Command: run')
+    logger.debug('Command: run')
 
     scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'run', 'Which script do you want to execute manually?')
     if not scriptIdentifier:
@@ -72,7 +73,7 @@ def run(update, context):
     greenbot.user.get(update.effective_chat.id).runManually(scriptIdentifier, update, context)
 
 def activate(update, context):
-    logging.debug('Command: activate')
+    logger.debug('Command: activate')
 
     scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'activate')
     if not scriptIdentifier:
@@ -83,7 +84,7 @@ def activate(update, context):
     greenbot.util.updateOrReply(update, random.choice(['👻', '🥳', '😁']) + ' Yay, it has been activated! Now use 👉 /schedule ' + scriptIdentifier + ' 👈 to execute it whenever you need (its currently scheduled ' + str(greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier)) + ')...')
 
 def schedule(update, context):
-    logging.debug('Command: schedule')
+    logger.debug('Command: schedule')
 
     scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'schedule', 'Which from your scripts do you mean ' + random.choice(['🤔', '🤨']) + '?')
     if not scriptIdentifier:
@@ -200,7 +201,7 @@ def schedule(update, context):
         return
 
 def deactivate(update, context):
-    logging.debug('Command: deactivate')
+    logger.debug('Command: deactivate')
 
     scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'deactivate', 'Yes, yes - I see. Which script should I ' + random.choice(['fire 😎', 'disable 😬', 'remove 😬']) + '?')
     if not scriptIdentifier:
@@ -216,7 +217,7 @@ def onError(update, context):
 
 def onButton(update, context):
     query = update.callback_query
-    logging.debug('Callback: Keyboard button pressed ' + str(query.data))
+    logger.debug('Callback: Keyboard button pressed ' + str(query.data))
     query.answer()
     greenbot.util.executeVirtualCommand(update, context, query.data)
 

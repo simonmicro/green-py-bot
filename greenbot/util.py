@@ -2,6 +2,7 @@ import random
 import logging
 import greenbot.repos
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+logger = logging.getLogger('greenbot.util')
 
 def updateOrReply(update, *args, **kwargs):
     # Detect if we are inside a callback (in that case we will update the msg) or just inside a handler
@@ -56,7 +57,7 @@ def executeVirtualCommand(update, context, cmdStr):
     msgData = cmdStr.split(' ')
     cmd = msgData[0]
     context.args = msgData[1:]
-    logging.debug('Found command ' + cmd + ' with params ' + str(context.args))
+    logger.debug('Found command ' + cmd + ' with params ' + str(context.args))
     if cmd == 'activate':
         greenbot.handlers.activate(update, context)
     elif cmd == 'schedule':
@@ -68,4 +69,4 @@ def executeVirtualCommand(update, context, cmdStr):
     elif cmd == 'run':
         greenbot.handlers.run(update, context)
     else:
-        logging.error('Command "' + cmd + '" not allowed inside callback!')
+        logger.error('Command "' + cmd + '" not allowed inside callback!')

@@ -12,11 +12,11 @@ from telegram.ext import MessageHandler
 from telegram.ext.filters import Filters
 
 updater = None
+logger = logging.getLogger('greenbot')
 
 def start():
     global updater
 
-    logger = logging.getLogger('greenbot')
     logger.info('Starting...')
 
     # Load config
@@ -55,7 +55,7 @@ def start():
 
     logger.info('Started The Green Bot #' + greenbot.config.version + '.')
     while greenbot.bot.updater.running:
-        logging.debug('Executing pending jobs...')
+        logger.debug('Executing pending jobs...')
         schedule.run_pending()
         time.sleep(10)
 

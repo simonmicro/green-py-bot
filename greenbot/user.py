@@ -3,6 +3,7 @@ import json
 import logging
 import greenbot.schedule
 import greenbot.repos
+logger = logging.getLogger('greenbot.user')
 
 userPath = 'config/user'
 userCache = {}
@@ -21,7 +22,7 @@ class User:
         self.__uid = int(uid)
 
         # We'll use the default config if nothing is found
-        logging.debug('Getting user data for ' + str(self.__uid))
+        logger.debug('Getting user data for ' + str(self.__uid))
         if os.path.isfile(self.__getConfigFileName()):
             with open(self.__getConfigFileName()) as file:
                 config = json.loads(file.read())
@@ -60,7 +61,7 @@ class User:
             # Create a new one...
             self.setScriptSchedule(scriptIdentifier, greenbot.schedule.Schedule())
         self.write()
-        logging.debug('Activated ' + scriptIdentifier + ' for user ' + str(self.__uid))
+        logger.debug('Activated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
 
     def deactivateScript(self, scriptIdentifier):
@@ -71,7 +72,7 @@ class User:
         if self.getScriptSchedule(scriptIdentifier) is not None:
                 self.getScriptSchedule(scriptIdentifier).deactivate()
         self.write()
-        logging.debug('Deactivated ' + scriptIdentifier + ' for user ' + str(self.__uid))
+        logger.debug('Deactivated ' + scriptIdentifier + ' for user ' + str(self.__uid))
         return
 
     def getScripts(self):
@@ -90,7 +91,7 @@ class User:
         self.__schedules[scriptIdentifier] = newSchedule
         self.write()
         newSchedule.activate(self, scriptIdentifier)
-        logging.debug('Rescheduled ' + scriptIdentifier + ' for user ' + str(self.__uid))
+        logger.debug('Rescheduled ' + scriptIdentifier + ' for user ' + str(self.__uid))
 
     def getUID(self):
         return self.__uid
@@ -103,7 +104,7 @@ class User:
         return self.__commandContext
 
     def runManually(self, scriptIdentifier, update, context):
-        logging.debug('Executing ' + scriptIdentifier + ' for user ' + str(self.__uid) + ' MANUALLY')
+        logger.debug('Executing ' + scriptIdentifier + ' for user ' + str(self.__uid) + ' MANUALLY')
         try:
             # Load the module
             module = greenbot.repos.getModule(scriptIdentifier)
@@ -112,14 +113,14 @@ class User:
             if hasattr(module, 'manualRun'):
                 module.manualRun(self, update, context)
             else:
-                logging.error('Ooops, the script ' + scriptIdentifier + ' has no manualRun(user, update, context) method!')
+                logger.error('Ooops, the script ' + scriptIdentifier + ' has no manualRun(user, update, context) method!')
             self.__lastRunResults[scriptIdentifier] = 1
         except:
             self.__lastRunResults[scriptIdentifier] = 0
             pass
 
     def runScheduled(self, scriptIdentifier):
-        logging.debug('Executing ' + scriptIdentifier + ' for user ' + str(self.__uid) + ' SCHEDULED')
+        logger.debug('Executing ' + scriptIdentifier + ' for user ' + str(self.__uid) + ' SCHEDULED')
         try:
             # Load the module
             module = greenbot.repos.getModule(scriptIdentifier)
@@ -128,7 +129,7 @@ class User:
             if hasattr(module, 'scheduledRun'):
                 module.scheduledRun(self)
             else:
-                logging.error('Ooops, the script ' + scriptIdentifier + ' has no scheduledRun(user) method!')
+                logger.error('Ooops, the script ' + scriptIdentifier + ' has no scheduledRun(user) method!')
             self.__lastRunResults[scriptIdentifier] = 1
         except:
             self.__lastRunResults[scriptIdentifier] = 0

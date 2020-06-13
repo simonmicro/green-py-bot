@@ -3,6 +3,7 @@ import greenbot.config
 import git
 import logging
 import importlib
+logger = logging.getLogger('greenbot.repos')
 
 reposPath = 'repos'
 # Make sure the repos path exists
@@ -10,7 +11,7 @@ os.makedirs(reposPath, exist_ok=True)
 
 def update():
     global reposPath
-    logging.debug('Updating repos')
+    logger.debug('Updating repos')
     # Update all copies of the remote repos
     for repoName, repoUrl in greenbot.config.repos.items():
         if len(repoUrl) == 0:
@@ -18,23 +19,23 @@ def update():
         repoPath = os.path.join(reposPath, repoName)
         if os.path.isdir(repoPath):
             # Dir is already there -> just update it
-            logging.info('Updating repo ' + repoName + ' from ' + repoUrl)
+            logger.info('Updating repo ' + repoName + ' from ' + repoUrl)
             try:
                 # ...but first make sure the dir is really a git dir (otherwise ignore)
                 git.Repo(repoPath).git_dir
                 git.Git(repoPath).pull()
             except git.exc.GitCommandError as e:
-                logging.error('Could not update ' + repoName + ': ' + str(e))
+                logger.error('Could not update ' + repoName + ': ' + str(e))
             except git.exc.InvalidGitRepositoryError:
-                logging.warn('The local copy of ' + repoName + ' is not a Git repo!')
+                logger.warn('The local copy of ' + repoName + ' is not a Git repo!')
         else:
-            logging.info('Cloning repo ' + repoName + ' from ' + repoUrl)
+            logger.info('Cloning repo ' + repoName + ' from ' + repoUrl)
             os.mkdir(repoPath)
             try:
                 git.Git().clone(repoUrl, repoPath)
             except git.exc.GitCommandError as e:
-                logging.error('Could not initial clone ' + repoName + ': ' + str(e))
-    logging.debug('Updated repos')
+                logger.error('Could not initial clone ' + repoName + ': ' + str(e))
+    logger.debug('Updated repos')
 
 def getRepos():
     repos = []
@@ -44,7 +45,7 @@ def getRepos():
 
 def getScripts(repoName):
     global reposPath
-    logging.debug('Checking for scripts in ' + repoName)
+    logger.debug('Checking for scripts in ' + repoName)
     scripts = []
     for root, dirs, files in os.walk(os.path.join(reposPath, repoName)):
         for filename in files:
@@ -57,7 +58,7 @@ def getModule(identifier):
     global reposPath
     (repoName, scriptName) = resolveIdentifier(identifier)
     modulePath = '.'.join(reposPath.split('/')) + '.' + '.'.join([repoName, scriptName])
-    logging.debug('Importing ' + modulePath)
+    logger.debug('Importing ' + modulePath)
     return importlib.import_module(modulePath)
 
 def makeIdentifier(repoName, scriptName = None):
