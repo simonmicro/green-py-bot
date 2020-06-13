@@ -92,3 +92,18 @@ def executeVirtualCommand(update, context, cmdStr):
         greenbot.handlers.run(update, context)
     else:
         logger.error('Command "' + cmd + '" not allowed inside callback!')
+
+## If chat type is not PRIVATE, make sure the user is admin (this also shows an error is the check is False)
+# @param update
+# @return Is the user priviledged?
+def isGroupAdminOrDirectChat(update):
+    if update.message is not None and update.message.from_user is not None and update.message.chat.type != update.message.chat.PRIVATE:
+        # Okay as first get list of admins for the chat
+        admins = update.message.chat.get_administrators()
+        # Now make sure the sender is in that admin list...
+        for chatMember in admins:
+            if chatMember.user == update.message.from_user:
+                return True
+        greenbot.util.updateOrReply(update, random.choice(['👮‍♂️', '👮‍♀️', '😡', '😬']) + random.choice([' Sorry, you are not allowed to do that!', ' Nope. Ask an admin for assistance.', ' Access denied until further notice.']))
+        return False
+    return True

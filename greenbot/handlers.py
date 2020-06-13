@@ -79,6 +79,8 @@ def info(update, context):
 # @param context
 def run(update, context):
     logger.debug('Command: run')
+    if not greenbot.util.isGroupAdminOrDirectChat(update):
+        return
 
     scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'run', 'Which script do you want to execute manually 🤔?')
     if not scriptIdentifier:
