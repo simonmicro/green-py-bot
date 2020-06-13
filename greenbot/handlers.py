@@ -21,7 +21,7 @@ def start(update, context):
         [KeyboardButton('/schedule'), KeyboardButton('/run')]
     ]
     context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! I am a bot ' + random.choice(['😏', '🤪']) + ', programmed to execute scripts by your schedule!\n' +
-        'To begin you should take a look into the store with /store. Note you can use /info to see all currently active scripts and their latest execution result. If you don\'t ' + 
+        'To begin you should take a look into the store with /store. Note you can also use /info to see all currently active scripts and their latest execution result. If you don\'t ' + 
         'find what you are looking for, maybe consider to program it yourself and contribute to https://github.com/Simonmicro/green-py-bot!', reply_markup=ReplyKeyboardMarkup(keyboard))
 
 ## Stop the main loop (useage not recommended)
@@ -65,14 +65,14 @@ def store(update, context):
 def info(update, context):
     logger.debug('Command: info')
     user = greenbot.user.get(update.message.chat.id)
-    context.bot.send_message(chat_id=update.effective_chat.id, text='Hi, I am The Green Bot #' + greenbot.config.version + ' at your service!')
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Hi, I am The Green Bot #' + greenbot.config.version + ' - at your service!')
     if len(user.getScripts()) > 0:
         scriptsStr = 'Your currently active scripts are:\n\n'
         for identifier in greenbot.user.get(update.message.chat.id).getScripts():
             scriptsStr = scriptsStr + user.getLastRunEmoji(identifier) + ' ' + identifier + ' \(' + str(user.getScriptSchedule(identifier)) + '\)\n'
         context.bot.send_message(chat_id=update.effective_chat.id, text=scriptsStr, parse_mode=telegram.ParseMode.MARKDOWN_V2)
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text='You have currently no scripts activated ' + random.choice(['😢', '😱', '🥺']) + '. Use /store to view for some!')
+        context.bot.send_message(chat_id=update.effective_chat.id, text='You have currently no scripts activated ' + random.choice(['😢', '😱', '🥺']) + '. Use /store to view for some.')
 
 ## Execute the requested script manually
 # @param update
@@ -80,7 +80,7 @@ def info(update, context):
 def run(update, context):
     logger.debug('Command: run')
 
-    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'run', 'Which script do you want to execute manually?')
+    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'run', 'Which script do you want to execute manually 🤔?')
     if not scriptIdentifier:
         return
 
@@ -99,7 +99,7 @@ def activate(update, context):
 
     # Okay, activate the script
     greenbot.user.get(update.effective_chat.id).activateScript(scriptIdentifier)
-    greenbot.util.updateOrReply(update, random.choice(['👻', '🥳', '😁']) + ' Yay, it has been activated! Now use 👉 /schedule ' + scriptIdentifier + ' 👈 to execute it whenever you need (its currently scheduled ' + str(greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier)) + ')...')
+    greenbot.util.updateOrReply(update, random.choice(['👻', '🥳', '😁']) + ' Yay, the script is now active! Now use 👉 /schedule ' + scriptIdentifier + ' 👈 to execute it whenever you need (its currently scheduled ' + str(greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier)) + ')...')
 
 ## Enable/disable the schedule for the scripts identifier for the user (its quite complex)
 # @param update
@@ -107,7 +107,7 @@ def activate(update, context):
 def schedule(update, context):
     logger.debug('Command: schedule')
 
-    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'schedule', 'Which from your scripts do you mean ' + random.choice(['🤔', '🤨']) + '?')
+    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'schedule', 'Which from your scripts did you mean ' + random.choice(['🤔', '🤨']) + '?')
     if not scriptIdentifier:
         return
 
@@ -136,7 +136,7 @@ def schedule(update, context):
                     user.write()
                 except ValueError:
                     user.setCommandContext('schedule ' + context.args[0] + ' setInterval')
-                    context.bot.send_message(chat_id=update.effective_chat.id, text='Thats not a number. Try again.')
+                    context.bot.send_message(chat_id=update.effective_chat.id, text='🤨 Thats not a number. Try again.')
                     return
             else:
                 # No -> update the command context so the user can send his input into this command
@@ -188,7 +188,7 @@ def schedule(update, context):
                 user.write()
             except ValueError:
                 user.setCommandContext('schedule ' + context.args[0] + ' addTime')
-                context.bot.send_message(chat_id=update.effective_chat.id, text='Thats not a valid time. Try again.')
+                context.bot.send_message(chat_id=update.effective_chat.id, text='🤨 Thats not a valid time. Try again.')
                 return
         else:
             # No time given... Ask for one...
@@ -206,10 +206,10 @@ def schedule(update, context):
                 for time in scriptSchedule.getTimes():
                     keyboard.append([InlineKeyboardButton(time, callback_data='schedule ' + context.args[0] + ' delTime ' + time)])
                 keyboard.append([InlineKeyboardButton('Back', callback_data='schedule ' + context.args[0] + ' editTime')])
-                greenbot.util.updateOrReply(update, 'Which one do you want to remove?', reply_markup=InlineKeyboardMarkup(keyboard))
+                greenbot.util.updateOrReply(update, 'Which time do you want to remove?', reply_markup=InlineKeyboardMarkup(keyboard))
                 return
             else:
-                context.bot.send_message(chat_id=update.effective_chat.id, text='At least one execution time is needed!')          
+                context.bot.send_message(chat_id=update.effective_chat.id, text='🤨 At least one execution time is needed (otherwise just disable the schedule)!')          
                 return      
 
     # Show menu for setting time/interval if called with editTime
