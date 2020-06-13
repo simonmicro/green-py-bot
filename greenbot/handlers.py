@@ -255,7 +255,7 @@ def onButton(update, context):
 # @param update
 # @param context
 def onMessage(update, context):
-    if greenbot.user.get(update.message.chat.id).getCommandContext() is not None:
+    if update.message is not None and greenbot.user.get(update.message.chat.id).getCommandContext() is not None:
         # Always reset the context before executing the virtual command with the context
         cmdContext = greenbot.user.get(update.message.chat.id).getCommandContext()
         greenbot.user.get(update.message.chat.id).setCommandContext(None)
