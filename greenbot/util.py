@@ -105,5 +105,6 @@ def isGroupAdminOrDirectChat(update):
             if chatMember.user == update.effective_user:
                 return True
         greenbot.util.updateOrReply(update, random.choice(['👮‍♂️', '👮‍♀️', '😡', '😬']) + random.choice([' Sorry, you are not allowed to do that!', ' Nope. Ask an admin for assistance.', ' Access denied until further notice.']))
+        logger.info('User id ' + str(update.effective_user) + ' tried to access a restricted command. Access denied.')
         return False
     return True
