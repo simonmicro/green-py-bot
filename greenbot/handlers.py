@@ -41,8 +41,12 @@ def store(update, context):
         'Description: ' + scriptInfo['description'] + '\n' + \
         'Version: ' + scriptInfo['version']
     keyboard = []
-    keyboard.append([InlineKeyboardButton('Activate', callback_data='activate ' + scriptIdentifier)])
-    keyboard.append([InlineKeyboardButton('Back', callback_data='store')])
+    if not greenbot.user.get(update.effective_chat.id).hasScript(scriptIdentifier):
+        keyboard.append([InlineKeyboardButton('Activate', callback_data='activate ' + scriptIdentifier)])
+    else:
+        keyboard.append([InlineKeyboardButton('Schedule', callback_data='schedule ' + scriptIdentifier)])
+        keyboard.append([InlineKeyboardButton('Deactivate', callback_data='deactivate ' + scriptIdentifier)])
+    keyboard.append([InlineKeyboardButton('Back', callback_data='store ' + greenbot.repos.resolveIdentifier(scriptIdentifier)[0])])
     greenbot.util.updateOrReply(update, response, reply_markup=InlineKeyboardMarkup(keyboard))
 
 def info(update, context):

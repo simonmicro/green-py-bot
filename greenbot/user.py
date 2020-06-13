@@ -47,6 +47,9 @@ class User:
         f.close()
         return
 
+    def hasScript(self, scriptIdentifier):
+        return scriptIdentifier in self.__scripts
+
     def activateScript(self, scriptIdentifier):
         self.__scripts.add(scriptIdentifier)
         # Preserve previous schedule (if available)
