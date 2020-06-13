@@ -18,13 +18,13 @@ Check it out on [https://hub.docker.com/r/realsimonmicro/green-py-bot](https://h
 You don't want to use docker? Okay, then make sure to have all packages from the `requirements.txt` installed and start the bot with `python3 main.py`
 
 ## Add own repositories ##
-You have a self-hosted instance and want to add some of your own (private) scripts? No problem! Just open the `data/config.json` and expand the `repo` section as needed. The key is the name, the value is e.g. the Git URL. Example? Here you go:
+You have a self-hosted instance and want to add some of your own (private) scripts? No problem! Just open the `config/config.json` and expand the `repo` section as needed. The key is the name, the value is e.g. the Git URL. Example? Here you go:
 ```
 "repos": {
     "myownrepo": "https://github.com/user/goodstuff.git"
 }
 ```
-Your repo will be automatically cloned and regulary updated (every 24h). Its content will be directly stored into `data/repo/[name]`, so make sure the scripts are stored inside the root of the repo!
+Your repo will be automatically cloned and regulary updated (every 24h). Its content will be directly stored into `repo/[name]`, so make sure the scripts are stored inside the root of the repo!
 
 ## Visit the bot over on Telegram! ##
 A copy of this repo is running always reachable on [https://t.me/green_py_bot](https://t.me/green_py_bot). Just start a conversation and look where it goes...
