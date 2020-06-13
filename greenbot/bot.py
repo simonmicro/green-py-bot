@@ -4,6 +4,7 @@ import schedule
 import greenbot.config
 import greenbot.handlers
 import greenbot.repos
+import greenbot.util
 import greenbot.user
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
@@ -30,14 +31,14 @@ def start():
     updater = Updater(token=greenbot.config.token, use_context=True)
 
     # Install handlers
-    updater.dispatcher.add_handler(CommandHandler(['start', 'help'], greenbot.handlers.start))
-    updater.dispatcher.add_handler(CommandHandler('store', greenbot.handlers.store))
-    updater.dispatcher.add_handler(CommandHandler('info', greenbot.handlers.info))
-    updater.dispatcher.add_handler(CommandHandler('activate', greenbot.handlers.activate))
-    updater.dispatcher.add_handler(CommandHandler('schedule', greenbot.handlers.schedule))
-    updater.dispatcher.add_handler(CommandHandler('deactivate', greenbot.handlers.deactivate))
-    updater.dispatcher.add_handler(CommandHandler('run', greenbot.handlers.run))
-#    updater.dispatcher.add_handler(CommandHandler('stop', greenbot.handlers.stop))
+    updater.dispatcher.add_handler(CommandHandler(['start', 'help'], greenbot.util.showTypingAction(greenbot.handlers.start)))
+    updater.dispatcher.add_handler(CommandHandler('store', greenbot.util.showTypingAction(greenbot.handlers.store)))
+    updater.dispatcher.add_handler(CommandHandler('info', greenbot.util.showTypingAction(greenbot.handlers.info)))
+    updater.dispatcher.add_handler(CommandHandler('activate', greenbot.util.showTypingAction(greenbot.handlers.activate)))
+    updater.dispatcher.add_handler(CommandHandler('schedule', greenbot.util.showTypingAction(greenbot.handlers.schedule)))
+    updater.dispatcher.add_handler(CommandHandler('deactivate', greenbot.util.showTypingAction(greenbot.handlers.deactivate)))
+    updater.dispatcher.add_handler(CommandHandler('run', greenbot.util.showTypingAction(greenbot.handlers.run)))
+#    updater.dispatcher.add_handler(CommandHandler('stop', greenbot.util.showTypingAction(greenbot.handlers.stop)))
 
     updater.dispatcher.add_handler(CallbackQueryHandler(greenbot.handlers.onButton))
     updater.dispatcher.add_handler(MessageHandler(Filters.text, greenbot.handlers.onMessage))

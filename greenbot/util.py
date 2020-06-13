@@ -108,3 +108,16 @@ def isGroupAdminOrDirectChat(update):
         logger.info('User id ' + str(update.effective_user) + ' tried to access a restricted command. Access denied.')
         return False
     return True
+
+## Show the typing action for up to 5 seconds, while executing the given function...
+# @param func
+# @return Wrapped function
+def showTypingAction(func):
+    from telegram import ChatAction
+    from functools import wraps
+
+    def f(update, context, *args, **kwargs):
+        context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
+        return func(update, context,  *args, **kwargs)
+
+    return f
