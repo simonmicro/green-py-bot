@@ -107,7 +107,7 @@ class User:
 
             # And call the scheduled function (if available)
             if hasattr(module, 'manualRun'):
-                module.scheduledRun(self, update, context)
+                module.manualRun(self, update, context)
             else:
                 logging.error('Ooops, the script ' + scriptIdentifier + ' has no manualRun(user, update, context) method!')
             self.__lastRunResults[scriptIdentifier] = 1
