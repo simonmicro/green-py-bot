@@ -1,3 +1,5 @@
+![bot-banner](/img/emblem.png)
+
 # What is this? #
 ![repo-size](https://img.shields.io/github/repo-size/simonmicro/green-py-bot)
 ![open-issues](https://img.shields.io/github/issues/simonmicro/green-py-bot)
