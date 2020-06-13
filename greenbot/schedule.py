@@ -40,12 +40,14 @@ class Schedule:
         return self.toString()
 
     def toString(self):
-        if self.__useInterval:
-            returnme =  'every ' + str(self.__interval) + ' minute'
-            if self.__interval > 1:
-                returnme = returnme + 's'
-            return returnme
-        return self.daysToString() + ' ' + self.timeToString()
+        if self.__enabled:
+            if self.__useInterval:
+                returnme =  'every ' + str(self.__interval) + ' minute'
+                if self.__interval > 1:
+                    returnme = returnme + 's'
+                return returnme
+            return self.daysToString() + ' ' + self.timeToString()
+        return 'manual only'
 
     def daysToString(self):
         if len(self.__days) == 7:
