@@ -58,7 +58,6 @@ def start():
         logger.debug('Executing pending jobs...')
         schedule.run_pending()
         time.sleep(10)
-
     logger.info('Stopped.')
 
 def stop():
