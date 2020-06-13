@@ -4,7 +4,7 @@ import git
 import logging
 import importlib
 
-reposPath = 'data/repos'
+reposPath = 'repos'
 # Make sure the repos path exists
 os.makedirs(reposPath, exist_ok=True)
 

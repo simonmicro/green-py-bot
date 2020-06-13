@@ -4,7 +4,7 @@ import logging
 import greenbot.schedule
 import greenbot.repos
 
-userPath = 'data/user'
+userPath = 'config/user'
 userCache = {}
 
 # Make sure the data path exists

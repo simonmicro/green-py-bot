@@ -6,7 +6,7 @@ import greenbot.repos
 
 token = ''
 repos = {}
-configPath = 'data/config.json'
+configPath = 'config/config.json'
 version = ''
 
 # Make sure the data path exists

@@ -4,4 +4,6 @@ services:
         image: realsimonmicro/green-py-bot
         restart: always
         volumes:
-            - ./data:/greenbot/data
+            - ./config:/greenbot/config
+        # Next is not really needed, except you need to debug...
+#            - ./repos:/greenbot/repos
