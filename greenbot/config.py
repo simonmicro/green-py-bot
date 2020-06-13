@@ -21,7 +21,7 @@ def load():
         # If not: Create default
         defaultConfig = {
             'token' : '',
-            'repos' : {}
+            'repos' : {'official':''}
         }
         f = open(configPath, 'w')
         f.write(json.dumps(defaultConfig, sort_keys=True, indent=4))
@@ -32,10 +32,5 @@ def load():
         config = json.loads(file.read())
         token = config['token']
         repos = config['repos']
-
-    # Insert dummy configs for already existing folders, which are not inside the config yet
-    for name in greenbot.repos.getLocalRepos():
-        if name not in repos:
-            repos[name] = ''
 
     logging.debug('Config loaded')
