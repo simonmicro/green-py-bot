@@ -208,7 +208,7 @@ def deactivate(update, context):
 
     # Okay, activate the script
     greenbot.user.get(update.effective_chat.id).deactivateScript(context.args[0])
-    greenbot.util.updateOrReply(update, random.choice(['💀', '💣', '😵']) + ' Bye ' + context.args[0] + '. You have been deactivated.')
+    greenbot.util.updateOrReply(update, random.choice(['💀', '👮‍♂️', '😵']) + ' Bye ' + context.args[0] + '. You have been deactivated.')
 
 def onError(update, context):
     greenbot.util.updateOrReply(update, random.choice(['🤯', '🤬', '😬', '🥴']) + ' I am broken...')
