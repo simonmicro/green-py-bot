@@ -57,8 +57,8 @@ def run(update, context):
     if not scriptIdentifier:
         return
 
-    # TODO
-    greenbot.util.updateOrReply(update, 'WIP')
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Executing ' + scriptIdentifier + '...')
+    greenbot.user.get(update.message.chat.id).runManually(update, context)
 
 def activate(update, context):
     logging.debug('Command: activate')
