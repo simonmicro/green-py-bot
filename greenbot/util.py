@@ -24,6 +24,7 @@ def updateOrReply(update, *args, **kwargs):
 # @param commandName We will execute 'commandName scriptIdentifier'
 # @param missingRepoOut
 # @param missingScriptOut
+# @return scripts identifier (at least partly)
 def getGlobalSkriptIdentifier(update, context, commandName, missingRepoOut = 'Okay, now tell me in which repository I should look 🤔', missingScriptOut = 'And which script do you mean ' + random.choice(['🧐', '🤨']) + '?'):
     # Are we missing the identifier or is it invalid?
     if len(context.args) < 1 or not greenbot.repos.resolveIdentifier(context.args[0])[0] in greenbot.repos.getRepos():
@@ -49,11 +50,12 @@ def getGlobalSkriptIdentifier(update, context, commandName, missingRepoOut = 'Ok
 # @param context
 # @param commandName
 # @param missingIdentifierOut
+# @return scripts identifier (at least partly)
 def getUserSkriptIdentifier(update, context, commandName, missingIdentifierOut):
     # Make sure the user has at least one script to select
     if len(greenbot.user.get(update.effective_chat.id).getScripts()) < 1:
         greenbot.util.updateOrReply(update, 'You have currently no scripts activated ' + random.choice(['😢', '😱', '🥶']) + '. Use /activate to begin your journey!')
-        return
+        return False
 
     # Show keyboard for active scripts
     if len(context.args) < 1 or not greenbot.repos.validateIdentifier(context.args[0]):
@@ -62,7 +64,7 @@ def getUserSkriptIdentifier(update, context, commandName, missingIdentifierOut):
         for scriptIdentifier in greenbot.user.get(update.effective_chat.id).getScripts():
             keyboard.append([InlineKeyboardButton(scriptIdentifier, callback_data=commandName + ' ' + scriptIdentifier)])
         greenbot.util.updateOrReply(update, missingIdentifierOut, reply_markup=InlineKeyboardMarkup(keyboard))
-        return
+        return False
 
     return context.args[0]
 
