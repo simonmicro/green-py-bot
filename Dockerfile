@@ -2,8 +2,8 @@ FROM alpine:latest
 
 # Permanent env
 WORKDIR /greenbot
-COPY .git .
-COPY greenbot .
+COPY .git ./.git
+COPY greenbot ./greenbot
 COPY main.py .
 COPY requirements.txt .
 RUN apk add --no-cache python3 git
