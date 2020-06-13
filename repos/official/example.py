@@ -7,7 +7,7 @@ def getScriptInfo():
     return {
         'name': 'Example script',
         'author': 'Simonmicro',
-        'description': 'A simple script, containing all required and optional method implementations.',
+        'description': 'A demo script, containing all required and optional method implementations.',
         'version': '1.0.0'
     }
 
