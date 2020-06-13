@@ -13,6 +13,8 @@ def update():
     logging.debug('Updating repos')
     # Update all copies of the remote repos
     for repoName, repoUrl in greenbot.config.repos.items():
+        if len(repoUrl) == 0:
+            continue
         repoPath = os.path.join(reposPath, repoName)
         if os.path.isdir(repoPath):
             # Dir is already there -> just update it
