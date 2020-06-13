@@ -97,12 +97,12 @@ def executeVirtualCommand(update, context, cmdStr):
 # @param update
 # @return Is the user priviledged?
 def isGroupAdminOrDirectChat(update):
-    if update.message is not None and update.message.from_user is not None and update.message.chat.type != update.message.chat.PRIVATE:
+    if update.effective_message is not None and update.effective_user is not None and update.effective_chat.type != update.effective_chat.PRIVATE:
         # Okay as first get list of admins for the chat
-        admins = update.message.chat.get_administrators()
+        admins = update.effective_chat.get_administrators()
         # Now make sure the sender is in that admin list...
         for chatMember in admins:
-            if chatMember.user == update.message.from_user:
+            if chatMember.user == update.effective_user:
                 return True
         greenbot.util.updateOrReply(update, random.choice(['👮‍♂️', '👮‍♀️', '😡', '😬']) + random.choice([' Sorry, you are not allowed to do that!', ' Nope. Ask an admin for assistance.', ' Access denied until further notice.']))
         return False
