@@ -14,6 +14,7 @@ from telegram.ext.filters import Filters
 updater = None
 logger = logging.getLogger('greenbot')
 
+## Startup the bot by loading config, users and handlers. Schedules the repo updates every 24h. Then enter the main loop.
 def start():
     global updater
 
@@ -60,6 +61,7 @@ def start():
         time.sleep(10)
     logger.info('Stopped.')
 
+## Inform the main loop to stop after the next run
 def stop():
     global updater
     logger.info('Stopping...')

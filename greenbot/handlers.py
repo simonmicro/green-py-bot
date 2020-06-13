@@ -10,6 +10,9 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram import ReplyKeyboardMarkup, KeyboardButton
 logger = logging.getLogger('greenbot.handlers')
 
+## Show the user the welcome sentence and send over the keyboard
+# @param update
+# @param context
 def start(update, context):
     logger.debug('Command: start')
     keyboard = [
@@ -21,12 +24,18 @@ def start(update, context):
         'To begin you should take a look into the store with /store. Note you can use /info to see all currently active scripts and their latest execution result. If you don\'t ' + 
         'find what you are looking for, maybe consider to program it yourself and contribute to https://github.com/Simonmicro/green-py-bot!', reply_markup=ReplyKeyboardMarkup(keyboard))
 
+## Stop the main loop (useage not recommended)
+# @param update
+# @param context
 def stop(update, context):
     logger.debug('Command: stop')
     context.bot.send_message(chat_id=update.effective_chat.id, text='🆘 Initiating bot shutdown...')
     from greenbot.bot import stop
     stop()
 
+## Show the user the store, with the scripts and some contextual buttons
+# @param update
+# @param context
 def store(update, context):
     logger.debug('Command: store')
 
@@ -50,6 +59,9 @@ def store(update, context):
     keyboard.append([InlineKeyboardButton('Back', callback_data='store ' + greenbot.repos.resolveIdentifier(scriptIdentifier)[0])])
     greenbot.util.updateOrReply(update, response, reply_markup=InlineKeyboardMarkup(keyboard))
 
+## Show the user a little hello from the current bot version and his active scripts
+# @param update
+# @param context
 def info(update, context):
     logger.debug('Command: info')
     user = greenbot.user.get(update.message.chat.id)
@@ -62,6 +74,9 @@ def info(update, context):
     else:
         context.bot.send_message(chat_id=update.effective_chat.id, text='You have currently no scripts activated ' + random.choice(['😢', '😱', '🥺']) + '. Use /store to view for some!')
 
+## Execute the requested script manually
+# @param update
+# @param context
 def run(update, context):
     logger.debug('Command: run')
 
@@ -72,6 +87,9 @@ def run(update, context):
     greenbot.util.updateOrReply(update, 'Executing ' + scriptIdentifier + '...')
     greenbot.user.get(update.effective_chat.id).runManually(scriptIdentifier, update, context)
 
+## Activate the requested script identifier for the user
+# @param update
+# @param context
 def activate(update, context):
     logger.debug('Command: activate')
 
@@ -83,6 +101,9 @@ def activate(update, context):
     greenbot.user.get(update.effective_chat.id).activateScript(scriptIdentifier)
     greenbot.util.updateOrReply(update, random.choice(['👻', '🥳', '😁']) + ' Yay, it has been activated! Now use 👉 /schedule ' + scriptIdentifier + ' 👈 to execute it whenever you need (its currently scheduled ' + str(greenbot.user.get(update.effective_chat.id).getScriptSchedule(scriptIdentifier)) + ')...')
 
+## Enable/disable the schedule for the scripts identifier for the user (its quite complex)
+# @param update
+# @param context
 def schedule(update, context):
     logger.debug('Command: schedule')
 
@@ -200,6 +221,9 @@ def schedule(update, context):
         greenbot.util.updateOrReply(update, '🕒 The current schedule is ' + str(scriptSchedule), reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
+## Disable the script of the user
+# @param update
+# @param context
 def deactivate(update, context):
     logger.debug('Command: deactivate')
 
@@ -211,16 +235,25 @@ def deactivate(update, context):
     greenbot.user.get(update.effective_chat.id).deactivateScript(context.args[0])
     greenbot.util.updateOrReply(update, random.choice(['💀', '👮‍♂️', '😵']) + ' Bye ' + context.args[0] + '. You have been deactivated.')
 
+## Callback on exceptions - just shows the `I am broken...`-msg
+# @param update
+# @param context
 def onError(update, context):
     greenbot.util.updateOrReply(update, random.choice(['🤯', '🤬', '😬', '🥴']) + ' I am broken...')
     raise context.error
 
+## Callback on inline keyboard buttons (executes their internal command)
+# @param update
+# @param context
 def onButton(update, context):
     query = update.callback_query
     logger.debug('Callback: Keyboard button pressed ' + str(query.data))
     query.answer()
     greenbot.util.executeVirtualCommand(update, context, query.data)
 
+## Callback on messages, will only be executed, if the users command context is set
+# @param update
+# @param context
 def onMessage(update, context):
     if greenbot.user.get(update.message.chat.id).getCommandContext() is not None:
         # Always reset the context before executing the virtual command with the context

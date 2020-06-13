@@ -6,9 +6,11 @@ import importlib
 logger = logging.getLogger('greenbot.repos')
 
 reposPath = 'repos'
+
 # Make sure the repos path exists
 os.makedirs(reposPath, exist_ok=True)
 
+## Query all configured repos and eventually call `git pull` on them (only if they are a Git repo) or `git clone` initially
 def update():
     global reposPath
     logger.debug('Updating repos')
@@ -37,12 +39,17 @@ def update():
                 logger.error('Could not initial clone ' + repoName + ': ' + str(e))
     logger.debug('Updated repos')
 
+## Get all known repo names
+# @return
 def getRepos():
     repos = []
     for name, url in greenbot.config.repos.items():
         repos.append(name)
     return repos
 
+## Get all known script names for that repo
+# @param repoName
+# @return
 def getScripts(repoName):
     global reposPath
     logger.debug('Checking for scripts in ' + repoName)
@@ -54,6 +61,9 @@ def getScripts(repoName):
         break
     return scripts
 
+## Get the compiled module for the script
+# @param identifier Identifier from `makeIdentifier`
+# @return module
 def getModule(identifier):
     global reposPath
     (repoName, scriptName) = resolveIdentifier(identifier)
@@ -61,11 +71,18 @@ def getModule(identifier):
     logger.debug('Importing ' + modulePath)
     return importlib.import_module(modulePath)
 
+## Create a unique identifier for the repo and script
+# @param repoName
+# @param scriptName
+# @return
 def makeIdentifier(repoName, scriptName = None):
     if scriptName is None:
         return repoName
     return repoName + '/' + scriptName
 
+## Resolves the identifier into an array
+# @param identifier
+# @return [0]=reponame, [1]=scriptname
 def resolveIdentifier(identifier):
     parts = identifier.split('/')
     if len(parts) < 1:
@@ -75,6 +92,10 @@ def resolveIdentifier(identifier):
     else:
         return [parts[0], parts[1]]
 
+
+## Is the identifier valid (repo and script existent)
+# @param identifier
+# @return True/False
 def validateIdentifier(identifier):
     parts = resolveIdentifier(identifier)
     # Verify that all parts are there

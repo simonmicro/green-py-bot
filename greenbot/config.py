@@ -7,14 +7,14 @@ logger = logging.getLogger('greenbot.config')
 
 token = ''
 repos = {}
-configPath = 'config/config.json'
 version = ''
 
 # Make sure the data path exists
 os.makedirs(os.path.split(configPath)[0], exist_ok=True)
 
-def load():
-    global configPath
+## Load all config vars...
+# @param configPath Load/Store the config json
+def load(configPath = 'config/config.json'):
     global token
     global repos
     global version
