@@ -3,8 +3,9 @@ import logging
 import greenbot.repos
 logger = logging.getLogger('greenbot.schedule')
 
+## Class to encapsulate all the diffenrent schedule-settings for the script of a user
 class Schedule:
-    __days = set([0, 1, 2, 3, 4, 5, 6]) # 0-6 are the weekdays
+    __days = set([0, 1, 2, 3, 4, 5, 6]) # 0-6 are the weekdays / dayIds
     __times = set(['00:00'])
     __interval = 10
     __useInterval = False
@@ -13,12 +14,14 @@ class Schedule:
     __forUser = None
     __enabled = True
 
-    # Simple class to wrap the different parameters
+    ## Just load the provided JSON if not None
+    # @param obj
     def __init__(self, obj = None):
         if obj is not None:
             self.load(obj)
-        return
 
+    ## Load the internal state from the JSON
+    # @param obj
     def load(self, obj):
         # This key was added later on...
         if 'enabled' in obj:
@@ -28,6 +31,8 @@ class Schedule:
         self.__useInterval = obj['useInterval']
         self.__times = set(obj['times'])
 
+    ## Store this into serializable object
+    # @return
     def save(self):
         return {
             'enabled': self.__enabled,
@@ -37,9 +42,13 @@ class Schedule:
             'times': list(self.__times),
         }
 
+    ## Just a wrapper for self.toString()
+    # @return
     def __str__(self):
         return self.toString()
 
+    ## Creates readible string of current settings
+    # @return
     def toString(self):
         if self.__enabled:
             if self.__useInterval:
@@ -50,14 +59,15 @@ class Schedule:
             return self.daysToString() + ' ' + self.timeToString()
         return 'manual only'
 
+    ## Resolve currently active days to a readible string
+    # @return
     def daysToString(self):
         if len(self.__days) == 7:
             return 'every day'
         return ', '.join(self.dayToString(x) for x in self.__days)
 
-    def timeToString(self):
-            return 'at ' + ', '.join(self.__times)
-
+    ## Resolve the given day id into readible day of the week
+    # @return
     @staticmethod
     def dayToString(dayId):
         if dayId == 0:
@@ -76,13 +86,12 @@ class Schedule:
             return 'Sunday'
         return 'Unknown'
 
-    def setInterval(self, interval):
-        self.__interval = abs(interval)
-        self.__apply()
-
+    ## Get array with currently active dayIds
+    # @return
     def getDays(self):
         return self.__days
 
+    ## Adds/Remove the given dayId to the active days
     def toggleDay(self, dayId):
         if dayId in self.__days:
             self.__days.remove(dayId)
@@ -90,6 +99,13 @@ class Schedule:
             self.__days.add(dayId)
         self.__apply()
 
+    ## Resolve currently active time(s) to a readible string
+    # @return
+    def timeToString(self):
+            return 'at ' + ', '.join(self.__times)
+
+    ## Verify the timeformat by trying to apply. And, of course, add it...
+    # @throws ValueError
     def addTime(self, time):
         self.__times.add(time)
         try:
@@ -98,39 +114,61 @@ class Schedule:
             self.__times.remove(time)
             raise ValueError
 
+    ## Remove the time from current trigger times
+    # @param time
     def removeTime(self, time):
         self.__times.remove(time)
         self.__apply()
 
+    ## Get the current trigger times
+    # @return
     def getTimes(self):
         return self.__times
 
+    ## Sets the interval for the interval based mode
+    # @param interval
+    def setInterval(self, interval):
+        self.__interval = abs(interval)
+        self.__apply()
+
+    ## Get the current interval in minutes
+    # @return
     def getInterval(self):
         return self.__interval
 
+    ## Is this schedule active?
+    # @return
     def isEnabled(self):
         return self.__enabled
 
+    ## Enable schedule
     def enable(self):
         self.__enabled = True
         self.__apply()
 
+    ## Disable schedule
     def disable(self):
         self.__enabled = False
         self.__apply()
 
+    ## Switch to interval based
     def enableInterval(self):
         self.__useInterval = True
         self.__apply()
 
+    ## Switch to days/times based
     def enableDayTime(self):
         self.__useInterval = False
         self.__apply()
 
+    ## Is this interval based right now?
+    # @return
     def usesInterval(self):
         return self.__useInterval
 
+    ## Update current job instances
     def __apply(self):
+        # First remove current jobs from the scheduler
         self.deactivate()
 
         # Create new job...
@@ -159,12 +197,14 @@ class Schedule:
                     self.__jobs.append(job)
             logger.info('Scheduled ' + self.__forSkriptIdentifier + ' ' + self.toString() + ' for user id ' + str(self.__forUser.getUID()))
 
+    ## Activate this schedule
     def activate(self, user, skriptIdentifier):
         # Store data for next run
         self.__forSkriptIdentifier = skriptIdentifier
         self.__forUser = user
         self.__apply()
 
+    ## Deactivate this schedule
     def deactivate(self):
         # Remove old job (if existent)
         if len(self.__jobs) != 0:
@@ -173,6 +213,7 @@ class Schedule:
             self.__jobs = []
             logger.info('Unscheduled ' + self.__forSkriptIdentifier + ' for user id ' + str(self.__forUser.getUID()))
 
+    ## Calls the User.run() for this schedule
     def run(self):
         logger.debug('Running schedule for user id ' + str(self.__forUser.getUID()) + ', script ' + self.__forSkriptIdentifier)
         self.__forUser.runScheduled(self.__forSkriptIdentifier)
