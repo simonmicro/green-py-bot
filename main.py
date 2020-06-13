@@ -30,7 +30,7 @@ greenbot.repos.update()
 # Schedue some maintenance job(s)
 schedule.every().day.do(greenbot.repos.update)
 
-logging.info('Started.')
+logging.info('Started The Green Bot #' + greenbot.config.version + '.')
 
 while greenbot.bot.updater.running:
     logging.debug('Executing pending jobs...')
