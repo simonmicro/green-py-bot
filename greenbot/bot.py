@@ -1,6 +1,10 @@
+import time
 import logging
+import schedule
 import greenbot.config
 import greenbot.handlers
+import greenbot.repos
+import greenbot.user
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
 from telegram.ext import CallbackQueryHandler
@@ -9,9 +13,17 @@ from telegram.ext.filters import Filters
 
 updater = None
 
-def init():
+def start():
     global updater
-    global dispatcher
+
+    logger = logging.getLogger('greenbot')
+    logger.info('Starting...')
+
+    # Load config
+    greenbot.config.load()
+
+    # And preload the user cache (otherwise we would not activate the schedules correctly...)
+    greenbot.user.getAll()
 
     # Init telegram
     updater = Updater(token=greenbot.config.token, use_context=True)
@@ -32,13 +44,24 @@ def init():
     # And error handlers...
     updater.dispatcher.add_error_handler(greenbot.handlers.onError)
 
-def start():
-    global updater
+    # Update the local repos
+    greenbot.repos.update()
 
+    # Schedue some maintenance job(s)
+    schedule.every().day.do(greenbot.repos.update)
+
+    # And begin with the main loop
     updater.start_polling()
 
-def stop():
-    logging.info('Stopping...')
-    global updater
+    logger.info('Started The Green Bot #' + greenbot.config.version + '.')
+    while greenbot.bot.updater.running:
+        logging.debug('Executing pending jobs...')
+        schedule.run_pending()
+        time.sleep(10)
 
+    logger.info('Stopped.')
+
+def stop():
+    global updater
+    logger.info('Stopping...')
     updater.stop()
