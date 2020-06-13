@@ -16,9 +16,9 @@ def start(update, context):
         [KeyboardButton('/activate'), KeyboardButton('/store'), KeyboardButton('/deactivate')],
         [KeyboardButton('/schedule'), KeyboardButton('/run')]
     ]
-    context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! I am a bot ' + random.choice(['😏', '🤪']) + ', programmed to execute scripts by your schedule. ' +
-        'To begin you should take a look into the store with /store. Note you can use /info to see all currently active scripts and their last execution result. If you don\'t ' + 
-        'find what you are looking for, maybe consider to program it yourself 💻!', reply_markup=ReplyKeyboardMarkup(keyboard))
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! I am a bot ' + random.choice(['😏', '🤪']) + ', programmed to execute scripts by your schedule!\n' +
+        'To begin you should take a look into the store with /store. Note you can use /info to see all currently active scripts and their latest execution result. If you don\'t ' + 
+        'find what you are looking for, maybe consider to program it yourself and contribute to https://github.com/Simonmicro/green-py-bot!', reply_markup=ReplyKeyboardMarkup(keyboard))
 
 def stop(update, context):
     logging.debug('Command: stop')
@@ -29,8 +29,8 @@ def stop(update, context):
 def store(update, context):
     logging.debug('Command: store')
 
-    scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'store', 'Welcome to the store, stranger 🖖! Before I can show you any of my beautiful scripts, please tell me in which repository you want to take a look with me...',
-        random.choice(['Good', '🤩 Perfect', 'Excellent']) + ' choice! Here you can see all the scripts inside that one particular repository. In which one are you more interested in ' + random.choice(['😊', '😇', '😁']) + '?')
+    scriptIdentifier = greenbot.util.getGlobalSkriptIdentifier(update, context, 'store', 'Welcome to the store, stranger ' + random.choice(['🖖', '😜']) + '! Before I can show you any of my beautiful scripts, please tell me in which repository you want to take a look with me' + random.choice(['', ' 🤔']) + '...',
+        random.choice(['Good', 'Excellent', '🤩 Perfect']) + ' choice! Here you can see all the scripts inside that one particular repository. In which one are you more interested in ' + random.choice(['😊', '😇', '😁']) + '?')
     if not scriptIdentifier:
         return
 
