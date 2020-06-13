@@ -1,9 +1,12 @@
 # What is this? #
+![repo-size](https://img.shields.io/github/repo-size/simonmicro/green-py-bot)
+![open-issues](https://img.shields.io/github/issues/simonmicro/green-py-bot)
+![last-commit](https://img.shields.io/github/last-commit/simonmicro/green-py-bot/master)
+
 This is a easy-to-use Telegram bot. Its main task is to execute trusted Python scripts by a schedule. Useful e.g. to fetch RSS feeds or monitor or... Just everything you can do with Python.
 You are missing a script? Just contribute and enjoy the community using it!
 
 ## Official docker image ##
-
 ![build-howto](https://img.shields.io/docker/cloud/automated/realsimonmicro/green-py-bot)
 ![build-state](https://img.shields.io/docker/cloud/build/realsimonmicro/green-py-bot)
 ![build-pulls](https://img.shields.io/docker/pulls/realsimonmicro/green-py-bot)
