@@ -3,6 +3,7 @@ FROM alpine:latest
 # Permanent env
 WORKDIR /greenbot
 COPY .git ./.git
+COPY repos ./repos
 COPY greenbot ./greenbot
 COPY main.py .
 COPY requirements.txt .
