@@ -5,5 +5,5 @@ services:
         restart: always
         volumes:
             - ./config:/greenbot/config
-        # Next is not really needed, except you need to debug...
+        # Next is not really needed, except you need to debug (this will remove the official scripts)...
 #            - ./repos:/greenbot/repos
