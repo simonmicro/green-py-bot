@@ -50,6 +50,16 @@ def info(update, context):
     else:
         context.bot.send_message(chat_id=update.effective_chat.id, text='You have currently no scripts activated ' + random.choice(['😢', '😱', '🥺']) + '. Use /activate to begin your journey!')
 
+def run(update, context):
+    logging.debug('Command: run')
+
+    scriptIdentifier = greenbot.util.getUserSkriptIdentifier(update, context, 'run', 'Which script do you want to execute manually?')
+    if not scriptIdentifier:
+        return
+
+    # TODO
+    greenbot.util.updateOrReply(update, 'WIP')
+
 def activate(update, context):
     logging.debug('Command: activate')
 

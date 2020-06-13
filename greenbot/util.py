@@ -65,5 +65,7 @@ def executeVirtualCommand(update, context, cmdStr):
         greenbot.handlers.deactivate(update, context)
     elif cmd == 'store':
         greenbot.handlers.store(update, context)
+    elif cmd == 'run':
+        greenbot.handlers.run(update, context)
     else:
         logging.error('Command "' + cmd + '" not allowed inside callback!')

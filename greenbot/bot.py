@@ -23,6 +23,7 @@ def init():
     updater.dispatcher.add_handler(CommandHandler('activate', greenbot.handlers.activate))
     updater.dispatcher.add_handler(CommandHandler('schedule', greenbot.handlers.schedule))
     updater.dispatcher.add_handler(CommandHandler('deactivate', greenbot.handlers.deactivate))
+    updater.dispatcher.add_handler(CommandHandler('run', greenbot.handlers.run))
 #    updater.dispatcher.add_handler(CommandHandler('stop', greenbot.handlers.stop))
 
     updater.dispatcher.add_handler(CallbackQueryHandler(greenbot.handlers.onButton))
