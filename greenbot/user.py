@@ -62,6 +62,7 @@ class User:
 
     def deactivateScript(self, scriptIdentifier):
         self.__scripts.remove(scriptIdentifier)
+        del __lastRunResults[scriptIdentifier]
         # We are not deleting the schedule data here - just in case the user deactivated the script by accident
         if self.getScriptSchedule(scriptIdentifier) is not None:
                 self.getScriptSchedule(scriptIdentifier).deactivate()
