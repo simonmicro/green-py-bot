@@ -91,7 +91,7 @@ class Schedule:
     def getDays(self):
         return self.__days
 
-    ## Adds/Remove the given dayId to the active days
+    ## Adds/Remove the given dayId to the active days. Also updates the current jobs...
     def toggleDay(self, dayId):
         if dayId in self.__days:
             self.__days.remove(dayId)
@@ -104,7 +104,7 @@ class Schedule:
     def timeToString(self):
             return 'at ' + ', '.join(self.__times)
 
-    ## Verify the timeformat by trying to apply. And, of course, add it...
+    ## Verify the timeformat by trying to apply. And, of course, add it... Also updates the current jobs...
     # @throws ValueError
     def addTime(self, time):
         self.__times.add(time)
@@ -114,7 +114,7 @@ class Schedule:
             self.__times.remove(time)
             raise ValueError
 
-    ## Remove the time from current trigger times
+    ## Remove the time from current trigger times. Also updates the current jobs...
     # @param time
     def removeTime(self, time):
         self.__times.remove(time)
@@ -125,7 +125,7 @@ class Schedule:
     def getTimes(self):
         return self.__times
 
-    ## Sets the interval for the interval based mode
+    ## Sets the interval for the interval based mode. Also updates the current jobs...
     # @param interval
     def setInterval(self, interval):
         self.__interval = abs(interval)
@@ -141,22 +141,22 @@ class Schedule:
     def isEnabled(self):
         return self.__enabled
 
-    ## Enable schedule
+    ## Enable schedule. Also updates the current jobs...
     def enable(self):
         self.__enabled = True
         self.__apply()
 
-    ## Disable schedule
+    ## Disable schedule. Also updates the current jobs...
     def disable(self):
         self.__enabled = False
         self.__apply()
 
-    ## Switch to interval based
+    ## Switch to interval based. Also updates the current jobs...
     def enableInterval(self):
         self.__useInterval = True
         self.__apply()
 
-    ## Switch to days/times based
+    ## Switch to days/times based. Also updates the current jobs...
     def enableDayTime(self):
         self.__useInterval = False
         self.__apply()
@@ -197,7 +197,7 @@ class Schedule:
                     self.__jobs.append(job)
             logger.info('Scheduled ' + self.__forSkriptIdentifier + ' ' + self.toString() + ' for user id ' + str(self.__forUser.getUID()))
 
-    ## Activate this schedule
+    ## Activate this schedule. Also updates the current jobs...
     def activate(self, user, skriptIdentifier):
         # Store data for next run
         self.__forSkriptIdentifier = skriptIdentifier
