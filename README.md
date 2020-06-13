@@ -12,7 +12,7 @@ You are missing a script? Just contribute and enjoy the community using it!
 ![build-pulls](https://img.shields.io/docker/pulls/realsimonmicro/green-py-bot)
 ![build-size](https://img.shields.io/docker/image-size/realsimonmicro/green-py-bot)
 
-Check it out on [https://hub.docker.com/r/realsimonmicro/green-py-bot](https://hub.docker.com/r/realsimonmicro/green-py-bot). To use it, just download the `docker-compose.yml` file and start the bot with `docker-compose up`. Thats it!
+You want to use your own hardware and host it yourself? Then check the docker container out on [https://hub.docker.com/r/realsimonmicro/green-py-bot](https://hub.docker.com/r/realsimonmicro/green-py-bot). To use it, just download the `docker-compose.yml` file and start the bot with `docker-compose up`. Thats it!
 
 ## Manual startup ##
 You don't want to use docker? Okay, then make sure to have all packages from the `requirements.txt` installed and start the bot with `python3 main.py`
