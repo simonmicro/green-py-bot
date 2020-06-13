@@ -34,10 +34,16 @@ def store(update, context):
     if not scriptIdentifier:
         return
 
+    scriptInfo = greenbot.repos.getModule(scriptIdentifier).getScriptInfo()
+    response = random.choice(['😊 As you wish.', '😏 Here you go...', '😁 All right!']) + ' Thats is everything i know:\n\n' + \
+        'Name: ' + scriptInfo['name'] + ' (' + scriptIdentifier + ')\n' + \
+        'Author: ' + scriptInfo['author'] + '\n' + \
+        'Description: ' + scriptInfo['description'] + '\n' + \
+        'Version: ' + scriptInfo['version']
     keyboard = []
     keyboard.append([InlineKeyboardButton('Activate', callback_data='activate ' + scriptIdentifier)])
     keyboard.append([InlineKeyboardButton('Back', callback_data='store')])
-    greenbot.util.updateOrReply(update, random.choice(['As you wish.', 'Here you go...', 'All right!']) + '\nName: ' + greenbot.repos.resolveIdentifier(scriptIdentifier)[1] + '\nVersion: ?\nInfo: ?', reply_markup=InlineKeyboardMarkup(keyboard))
+    greenbot.util.updateOrReply(update, response, reply_markup=InlineKeyboardMarkup(keyboard))
 
 def info(update, context):
     logging.debug('Command: info')

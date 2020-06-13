@@ -4,7 +4,12 @@ import greenbot.bot
 
 # The implementation of this method is REQUIRED.
 def getScriptInfo():
-    return
+    return {
+        'name': 'Example script',
+        'author': 'Simonmicro',
+        'description': 'A simple script, containing all required and optional method implementations.',
+        'version': '1.0.0'
+    }
 
 # Gets called on /run - implementation is OPTIONAL.
 def manualRun(user, update, context):
