@@ -155,10 +155,11 @@ def get(uid):
 def getAll():
     global userCache
     global userPath
-    for (root, dirs, files) in os.walk(userPath):
-        for filename in files:
-            if filename.endswith('.json'):
-                # Okay, found a user id -> load it into the cache
-                get(int(filename[:-5]))
-        break
+    if len(userCache) < 1:
+        for (root, dirs, files) in os.walk(userPath):
+            for filename in files:
+                if filename.endswith('.json'):
+                    # Okay, found a user id -> load it into the cache
+                    get(int(filename[:-5]))
+            break
     return userCache

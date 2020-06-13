@@ -5,6 +5,8 @@ import logging
 import greenbot.repos
 logger = logging.getLogger('greenbot.config')
 
+configPath = 'config/config.json'
+
 token = ''
 repos = {}
 version = ''
@@ -13,8 +15,7 @@ version = ''
 os.makedirs(os.path.split(configPath)[0], exist_ok=True)
 
 ## Load all config vars...
-# @param configPath Load/Store the config json
-def load(configPath = 'config/config.json'):
+def load():
     global token
     global repos
     global version
