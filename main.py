@@ -10,6 +10,8 @@ import greenbot.user
 # Prepare logger
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
+logging.info('Starting...')
+
 # Load config
 greenbot.config.load()
 
@@ -27,6 +29,8 @@ greenbot.repos.update()
 
 # Schedue some maintenance job(s)
 schedule.every().day.do(greenbot.repos.update)
+
+logging.info('Started.')
 
 while greenbot.bot.updater.running:
     logging.debug('Executing pending jobs...')

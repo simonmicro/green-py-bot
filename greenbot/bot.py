@@ -32,7 +32,6 @@ def init():
     updater.dispatcher.add_error_handler(greenbot.handlers.onError)
 
 def start():
-    logging.info('Starting...')
     global updater
 
     updater.start_polling()
