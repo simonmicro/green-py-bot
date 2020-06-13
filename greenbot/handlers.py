@@ -14,7 +14,7 @@ def start(update, context):
     keyboard = [
         [KeyboardButton('/info')],
         [KeyboardButton('/activate'), KeyboardButton('/store'), KeyboardButton('/deactivate')],
-        [KeyboardButton('/schedule')]
+        [KeyboardButton('/schedule'), KeyboardButton('/run')]
     ]
     context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! I am a bot ' + random.choice(['😏', '🤪']) + ', programmed to execute scripts by your schedule. ' +
         'To begin you should take a look into the store with /store. Note you can use /info to see all currently active scripts and their last execution result. If you don\'t ' + 
