@@ -33,6 +33,8 @@ Your repo will be automatically cloned and regulary updated (every 24h). Its con
 A copy of this repo is running always reachable on [https://t.me/green_py_bot](https://t.me/green_py_bot). Just start a conversation and look where it goes...
 
 ### The emblem ###
-The emplem has been compose from the following Pixabay images:
+The emblem has been composed from the following Pixabay images:
 * https://pixabay.com/photos/code-programming-python-1084923/
 * https://pixabay.com/vectors/time-time-of-clock-time-indicating-1606153/
+
+_You can use it (of course) freely for your own bot-instance, but please preserve the original author information._
