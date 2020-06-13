@@ -34,6 +34,12 @@ def update():
                 logging.error('Could not initial clone ' + repoName + ': ' + str(e))
     logging.debug('Updated repos')
 
+def getLocalRepos():
+    global reposPath
+    # Return array with names of repos, which are available locally
+    for (root, dirs, files) in os.walk(reposPath):
+        return dirs
+
 def getRepos():
     repos = []
     for name, url in greenbot.config.repos.items():

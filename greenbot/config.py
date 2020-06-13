@@ -1,6 +1,7 @@
 import logging
 import os
 import json
+import greenbot.repos
 
 token = ''
 repos = {}
@@ -31,4 +32,10 @@ def load():
         config = json.loads(file.read())
         token = config['token']
         repos = config['repos']
+
+    # Insert dummy configs for already existing folders, which are not inside the config yet
+    for name in greenbot.repos.getLocalRepos():
+        if name not in repos:
+            repos[name] = ''
+
     logging.debug('Config loaded')
