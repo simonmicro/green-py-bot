@@ -250,7 +250,8 @@ def deactivate(update, context):
 # @param update
 # @param context
 def onError(update, context):
-    greenbot.util.updateOrReply(update, random.choice(['🤯', '🤬', '😬', '🥴']) + ' I am broken...')
+    if update is not None:
+        greenbot.util.updateOrReply(update, random.choice(['🤯', '🤬', '😬', '🥴']) + ' I am broken...')
     raise context.error
 
 ## Callback on inline keyboard buttons (executes their internal command)
