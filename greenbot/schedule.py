@@ -168,8 +168,12 @@ class Schedule:
 
     ## Update current job instances
     def __apply(self):
-        # First remove current jobs from the scheduler
-        self.deactivate()
+        # First remove current jobs from the scheduler (if existent)
+        if len(self.__jobs) != 0:
+            for job in self.__jobs:
+                schedule.cancel_job(job)
+            self.__jobs = []
+            logger.info('Unscheduled ' + self.__forSkriptIdentifier + ' for user id ' + str(self.__forUser.getUID()))
 
         # Create new job...
         if self.__enabled and self.__forUser is not None and self.__forSkriptIdentifier is not None:
@@ -197,21 +201,12 @@ class Schedule:
                     self.__jobs.append(job)
             logger.info('Scheduled ' + self.__forSkriptIdentifier + ' ' + self.toString() + ' for user id ' + str(self.__forUser.getUID()))
 
-    ## Activate this schedule. Also updates the current jobs...
-    def activate(self, user, skriptIdentifier):
+    ## Link the schedule to the users script. This also queues the jobs (if the schedule is enabled)
+    def link(self, user, skriptIdentifier):
         # Store data for next run
         self.__forSkriptIdentifier = skriptIdentifier
         self.__forUser = user
         self.__apply()
-
-    ## Deactivate this schedule
-    def deactivate(self):
-        # Remove old job (if existent)
-        if len(self.__jobs) != 0:
-            for job in self.__jobs:
-                schedule.cancel_job(job)
-            self.__jobs = []
-            logger.info('Unscheduled ' + self.__forSkriptIdentifier + ' for user id ' + str(self.__forUser.getUID()))
 
     ## Calls the User.run() for this schedule
     def run(self):

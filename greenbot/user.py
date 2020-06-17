@@ -62,9 +62,11 @@ class User:
     def activateScript(self, scriptIdentifier):
         self.__scripts.add(scriptIdentifier)
         # Preserve previous schedule (if available)
-        if self.getScriptSchedule(scriptIdentifier) is not None:
+        currSched = self.getScriptSchedule(scriptIdentifier)
+        if currSched is not None:
             # Just reactivate it
-            self.getScriptSchedule(scriptIdentifier).activate(self, scriptIdentifier)
+            currSched.link(self, scriptIdentifier)
+            currSched.enable()
         else:
             # Create a new one...
             self.setScriptSchedule(scriptIdentifier, greenbot.schedule.Schedule())
@@ -77,8 +79,9 @@ class User:
         if scriptIdentifier in self.__lastRunResults:
             del self.__lastRunResults[scriptIdentifier]
         # We are not deleting the schedule data here - just in case the user deactivated the script by accident
-        if self.getScriptSchedule(scriptIdentifier) is not None:
-                self.getScriptSchedule(scriptIdentifier).deactivate()
+        currSched = self.getScriptSchedule(scriptIdentifier)
+        if currSched is not None:
+            currSched.disable()
         self.write()
         logger.debug('Deactivated ' + scriptIdentifier + ' for user ' + str(self.__uid))
 
@@ -97,12 +100,13 @@ class User:
     ## Change the schedule for the identifier
     def setScriptSchedule(self, scriptIdentifier, newSchedule):
         # Deactivate current schedule
-        if self.getScriptSchedule(scriptIdentifier) is not None:
-            self.getScriptSchedule(scriptIdentifier).deactivate()
+        currSched = self.getScriptSchedule(scriptIdentifier)
+        if currSched is not None:
+            currSched.disable()
         # And install new schedule
         self.__schedules[scriptIdentifier] = newSchedule
         self.write()
-        newSchedule.activate(self, scriptIdentifier)
+        newSchedule.link(self, scriptIdentifier)
         logger.debug('Rescheduled ' + scriptIdentifier + ' for user ' + str(self.__uid))
 
     ## Get chat id / user id
