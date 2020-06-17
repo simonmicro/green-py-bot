@@ -59,6 +59,7 @@ class User:
         return scriptIdentifier in self.__scripts
 
     ## Activates this identifier with a default schedule
+    # @param scriptIdentifier
     def activateScript(self, scriptIdentifier):
         self.__scripts.add(scriptIdentifier)
         # Preserve previous schedule (if available)
@@ -74,6 +75,7 @@ class User:
         logger.debug('Activated ' + scriptIdentifier + ' for user ' + str(self.__uid))
 
     ## Deactivate this identifier and schedule for this user
+    # @param scriptIdentifier
     def deactivateScript(self, scriptIdentifier):
         self.__scripts.remove(scriptIdentifier)
         if scriptIdentifier in self.__lastRunResults:
