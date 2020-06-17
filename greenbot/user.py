@@ -25,7 +25,7 @@ class User:
         self.__uid = int(uid)
 
         # We'll use the default config if nothing is found
-        logger.debug('Getting user data for ' + str(self.__uid))
+        logger.debug('Getting user ' + str(self.__uid) + ' from ' + self.__getConfigFileName())
         if os.path.isfile(self.__getConfigFileName()):
             with open(self.__getConfigFileName()) as file:
                 config = json.loads(file.read())
