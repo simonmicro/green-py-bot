@@ -201,7 +201,6 @@ class Schedule:
             logger.info('Scheduled ' + self.__forSkriptIdentifier + ' ' + self.toString() + ' for user id ' + str(self.__forUser.getUID()))
         else:
             logger.info('Unscheduled ' + self.__forSkriptIdentifier + ' for user id ' + str(self.__forUser.getUID()))
-        logger.debug('Next global execution is scheduled for ' + str(schedule.next_run()))
 
     ## Link the schedule to the users script. This also queues the jobs (if the schedule is enabled)
     def link(self, user, skriptIdentifier):

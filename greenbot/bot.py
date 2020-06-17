@@ -57,7 +57,7 @@ def start():
 
     logger.info('Started The Green Bot #' + greenbot.config.version + '.')
     while greenbot.bot.updater.running:
-        logger.debug('Executing pending jobs...')
+        logger.debug('Executing pending jobs (next is scheduled for ' + str(schedule.next_run()) + ')...')
         schedule.run_pending()
         time.sleep(10)
     logger.info('Stopped.')
