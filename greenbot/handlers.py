@@ -202,7 +202,7 @@ def schedule(update, context):
         else:
             # No time given... Ask for one...
             user.setCommandContext('schedule ' + context.args[0] + ' addTime')
-            context.bot.send_message(chat_id=update.effective_chat.id, text='Okay, send me the new time formatted like 11:42!')
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Okay, send me the new time formatted like 11:42! But please note, that my timezone is currently +00:00.')
             return
     if context.args[1] == 'delTime':
         if len(context.args) == 3:
