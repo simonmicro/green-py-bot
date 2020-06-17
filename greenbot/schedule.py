@@ -180,24 +180,24 @@ class Schedule:
                 self.__jobs.append(schedule.every(self.__interval).minutes.do(Schedule.run, self))
             else:
                 for dayId in self.__days:
-                    job = schedule.every()
-                    if dayId == 0:
-                        job = job.monday
-                    elif dayId == 1:
-                        job = job.tuesday
-                    elif dayId == 2:
-                        job = job.wednesday
-                    elif dayId == 3:
-                        job = job.thursday
-                    elif dayId == 4:
-                        job = job.friday
-                    elif dayId == 5:
-                        job = job.saturday
-                    elif dayId == 6:
-                        job = job.sunday
                     for time in self.__times:
+                        job = schedule.every()
+                        if dayId == 0:
+                            job = job.monday
+                        elif dayId == 1:
+                            job = job.tuesday
+                        elif dayId == 2:
+                            job = job.wednesday
+                        elif dayId == 3:
+                            job = job.thursday
+                        elif dayId == 4:
+                            job = job.friday
+                        elif dayId == 5:
+                            job = job.saturday
+                        elif dayId == 6:
+                            job = job.sunday
                         job = job.at(time).do(Schedule.run, self)
-                    self.__jobs.append(job)
+                        self.__jobs.append(job)
             logger.info('Scheduled ' + self.__forSkriptIdentifier + ' ' + self.toString() + ' for user id ' + str(self.__forUser.getUID()))
         else:
             logger.info('Unscheduled ' + self.__forSkriptIdentifier + ' for user id ' + str(self.__forUser.getUID()))
