@@ -13,16 +13,14 @@ os.makedirs(userPath, exist_ok=True)
 
 ## Represents the user with all of his scrpts, schedules and settings
 class User:
-    __uid = None
-    __scripts = set() # Stores active script identifiers
-    __schedules = {} # Stores schedule information for active script identifiers
-    __lastRunResults = {} # Stores the last execution state for a script identifier 0 = Failed, 1 = Success, * = Warning
-    __commandContext = None # Used to prepend commands for free text inputs
-
     ## Load the user from diks (or create default instance if new)
     # @param uid
     def __init__(self, uid):
         self.__uid = int(uid)
+        self.__scripts = set() # Stores active script identifiers
+        self.__schedules = {} # Stores schedule information for active script identifiers
+        self.__lastRunResults = {} # Stores the last execution state for a script identifier 0 = Failed, 1 = Success, * = Warning
+        self.__commandContext = None # Used to prepend commands for free text inputs
 
         # We'll use the default config if nothing is found
         logger.debug('Getting user ' + str(self.__uid) + ' from ' + self.__getConfigFileName())

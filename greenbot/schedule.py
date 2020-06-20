@@ -5,18 +5,17 @@ logger = logging.getLogger('greenbot.schedule')
 
 ## Class to encapsulate all the diffenrent schedule-settings for the script of a user
 class Schedule:
-    __days = set([0, 1, 2, 3, 4, 5, 6]) # 0-6 are the weekdays / dayIds
-    __times = set(['00:00'])
-    __interval = 10
-    __useInterval = False
-    __jobs = []
-    __forSkriptIdentifier = None
-    __forUser = None
-    __enabled = True
-
     ## Just load the provided JSON if not None
     # @param obj
     def __init__(self, obj = None):
+        self.__days = set([0, 1, 2, 3, 4, 5, 6]) # 0-6 are the weekdays / dayIds
+        self.__times = set(['00:00'])
+        self.__interval = 10
+        self.__useInterval = False
+        self.__jobs = []
+        self.__forSkriptIdentifier = None
+        self.__forUser = None
+        self.__enabled = True
         if obj is not None:
             self.load(obj)
 
