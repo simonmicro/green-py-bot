@@ -30,7 +30,8 @@ You have a self-hosted instance and want to add some of your own (private) scrip
 Your repo will be automatically cloned and regulary updated (every 24h). Its content will be directly stored into `repo/[name]`, so make sure the scripts are stored inside the root of the repo!
 
 ## Visit the bot over on Telegram! ##
-A copy of this repo is running always reachable on [https://t.me/green_py_bot](https://t.me/green_py_bot). Just start a conversation and look where it goes...
+~~A copy of this repo is running always reachable on [https://t.me/green_py_bot](https://t.me/green_py_bot). Just start a conversation and look where it goes...~~
+The bot has been taken offline at 2020-12-12 due not enough users 😢...
 
 ### The emblem... ###
 ...has been composed from the following Pixabay images:
